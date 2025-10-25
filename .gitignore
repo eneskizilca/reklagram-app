@@ -1,0 +1,25 @@
+# Python Sanal Ortamları
+/backend/venv/
+
+# Docker İle Oluşturulanlar
+.dockerignore
+.env.*
+!.env.example # Eğer örnek bir .env dosyası tutmak istersen (üretim ortamı için)
+
+# Docker Compose Tarafından Oluşturulan Volume Verileri (Genellikle .git dışındadır ama garanti olsun)
+# Bu satırlar Docker compose volumes kısmındaki verilerin github'a gitmesini engeller
+db_data/
+mongo_data/
+
+# Frontend (Next.js) İçin Özel
+/frontend/.next/
+/frontend/node_modules/
+/frontend/npm-debug.log*
+/frontend/.env.local # Frontend'in kendi .env dosyası
+/frontend/.env*.local
+/frontend/.vscode/
+
+# Genel Geliştirme Ortamı Dosyaları
+.vscode/ # VS Code ayarları
+.DS_Store # macOS
+.env # Backend'deki .env dosyası

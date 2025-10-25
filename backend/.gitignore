@@ -1,0 +1,23 @@
+# Python Sanal Ortamları
+venv/
+
+# Python derleme çıktıları
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Veritabanı Dosyaları (SQLite gibi kullanırsak, PostgreSQL/MongoDB Docker'da olduğu için genelde buraya girmez)
+*.db
+*.sqlite
+*.sqlite3
+
+# Ortam Değişkeni Dosyaları
+.env
+
+# Otomatik Oluşturulan Diğer Dosyalar
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ipynb_checkpoints
