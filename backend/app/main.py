@@ -3,13 +3,18 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from . import models
-from .database import engine, SessionLocal, get_db
-from .routers import auth # auth yönlendiricisini import et
+# --- BURASI ÖNEMLİ ---
+from .database import engine, Base 
 
+# Şimdi modelleri models/__init__.py üzerinden import ediyoruz
+# Bu importlar sayesinde Base.metadata.create_all() tüm modelleri tanır.
+from .models import Role, User, Influencer, Brand, Collaboration # <-- BU ŞEKİLDE OLMALI
 
-# Veritabanı tablolarını oluştur
-models.Base.metadata.create_all(bind=engine)
+# Tüm modeller import edildikten sonra tabloları oluştur
+Base.metadata.create_all(bind=engine)
+# --- BURASI ÖNEMLİ SONU ---
+
+from .routers import auth
 
 app = FastAPI(
     title="ReklaGram API",
@@ -17,10 +22,9 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# Auth yönlendiricisini uygulamaya dahil et
 app.include_router(auth.router)
 
-@app.get("/", tags=["Root"]) # tags ekleyebiliriz
+@app.get("/", tags=["Root"])
 def read_root():
     content = {"message": "ReklaGram Backend Çalışıyor ve Veritabanı Bağlantısı Hazır!"}
-    return JSONResponse(content=content , media_type="application/json; charset=utf-8")
+    return JSONResponse(content=content)
