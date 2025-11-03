@@ -31,15 +31,15 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.next
     environment:
       NEXT_PUBLIC_API_URL: "http://localhost:8000"
     depends_on:
       - backend
     networks:
       - reklagram_network
-    # --- YENİ EKLENEN SATIR ---
-    # Dockerfile'daki CMD komutunu ezip, geliştirme sunucusunu başlatıyoruz.
-    command: yarn dev
+    # Production mode kullan (build sırasında axios yüklendi)
+    command: yarn start
 
   # PostgreSQL Veritabanı Servisi
   db_postgres:

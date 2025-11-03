@@ -4,11 +4,15 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
 # --- BURASI ÖNEMLİ ---
-from .database import engine, Base 
+from .database import engine
 
-# Şimdi modelleri models/__init__.py üzerinden import ediyoruz
+# Base'i ve tüm modelleri models paketinden import et
 # Bu importlar sayesinde Base.metadata.create_all() tüm modelleri tanır.
-from .models import Role, User, Influencer, Brand, Collaboration # <-- BU ŞEKİLDE OLMALI
+from .models.base import Base
+from .models.user import User
+from .models.influencer import Influencer
+from .models.brand import Brand
+from .models.collaboration import Collaboration
 
 # Tüm modeller import edildikten sonra tabloları oluştur
 Base.metadata.create_all(bind=engine)

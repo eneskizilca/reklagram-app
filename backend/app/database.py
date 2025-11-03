@@ -1,7 +1,6 @@
 # app/database.py
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
@@ -17,9 +16,9 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
+# Base artık models/base.py'de tanımlanıyor
+# from .models.base import Base # (Bu satırı burada kullanmıyoruz, circular import olmasın diye)
 
-# --- YENİ EKLENEN KISIM ---
 # Veritabanı oturumu almak için bağımlılık fonksiyonu
 def get_db():
     db = SessionLocal()

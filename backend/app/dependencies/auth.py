@@ -6,10 +6,11 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt  # Direkt bcrypt kullanacağız (passlib yerine)
 
 # --- DEĞİŞEN KISIM ---
 from ..database import SessionLocal, get_db # get_db'yi buradan import edeceğiz
+from ..models.base import RoleType  # RoleType Enum'ını import et
 from ..models.user import User as DBUser # SQLAlchemy modelini DBUser olarak import et
 from ..schemas.user import User as UserSchema # Pydantic modelini UserSchema olarak import et
 # --- DEĞİŞİKLİK SONU ---
@@ -28,21 +29,48 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY ortam değişkeni ayarlanmadı.")
 
-# ----- Şifreleme ve Token Ayarları (Aynı kalacak) -----
+# ----- Şifreleme ve Token Ayarları -----
 # OAuth2 şifre akışı için güvenlik şeması (Swagger UI için)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login") # tokenUrl path'i /auth/login olacak
 
-# Şifre hashleme için bağlam (context)
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# ----- Yardımcı Fonksiyonlar (Aynı kalacak) -----
+# ----- Yardımcı Fonksiyonlar (Direkt bcrypt kullanıyor) -----
 
 # Şifre hashleme
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Şifreyi doğrula (bcrypt ile)
+    """
+    # String'i byte'a çevir
+    password_bytes = plain_password.encode('utf-8')
+    hashed_bytes = hashed_password.encode('utf-8')
+    
+    # 72 byte limitini kontrol et
+    if len(password_bytes) > 72:
+        password_bytes = password_bytes[:72]
+    
+    try:
+        return bcrypt.checkpw(password_bytes, hashed_bytes)
+    except Exception:
+        return False
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+def get_password_hash(password: str) -> str:
+    """
+    Şifreyi hashle (bcrypt ile)
+    Otomatik olarak 72 byte limitini yönetir
+    """
+    # String'i byte'a çevir
+    password_bytes = password.encode('utf-8')
+    
+    # 72 byte limitini kontrol et
+    if len(password_bytes) > 72:
+        password_bytes = password_bytes[:72]
+    
+    # Salt oluştur ve hashle
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    
+    # Byte'ı string'e çevir (veritabanına kaydetmek için)
+    return hashed.decode('utf-8')
 
 # JWT oluşturma
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
@@ -81,22 +109,22 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: SessionLocal
 
     return UserSchema.from_orm(user) # Pydantic model olarak döndür
 
-# ----- Rol Doğrulama Fonksiyonları (Aynı kalacak) -----
+# ----- Rol Doğrulama Fonksiyonları (Enum tabanlı) -----
 
 # Mevcut influencer'ı doğrular
 async def get_current_influencer(current_user: UserSchema = Depends(get_current_user)):
-    if current_user.role_id != 1: # 1: Influencer rolü
+    if current_user.role != RoleType.Influencer:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sadece Influencer'lara özel.")
     return current_user
 
 # Mevcut markayı doğrular
 async def get_current_brand(current_user: UserSchema = Depends(get_current_user)):
-    if current_user.role_id != 2: # 2: Brand rolü
+    if current_user.role != RoleType.Brand:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sadece Markalara özel.")
     return current_user
 
 # Mevcut super admini doğrular
 async def get_current_super_admin(current_user: UserSchema = Depends(get_current_user)):
-    if current_user.role_id != 3: # 3: SuperAdmin rolü
+    if current_user.role != RoleType.SuperAdmin:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sadece SuperAdmin'lere özel.")
     return current_user

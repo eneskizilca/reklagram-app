@@ -5,66 +5,114 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
 
-# --- İŞTE BU KISIM TÜM SORUNU ÇÖZECEK ---
-from .. import models
-# schemas klasörünün içindeki dosyaları özel olarak import ediyoruz
+# Modelleri ve Enum'ı import et
+from ..models.base import RoleType
+from ..models.user import User
+from ..models.influencer import Influencer
+from ..models.brand import Brand
+
+# Şemaları import et
 from ..schemas import user as user_schema
 from ..schemas import auth as auth_schema
-# ---------------------------------------------
 
+# Auth bağımlılıklarını import et
 from ..dependencies.auth import (
     get_db,
     get_password_hash,
     verify_password,
     create_access_token,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    oauth2_scheme,
+    SECRET_KEY,
+    ALGORITHM
 )
+
+from jose import JWTError, jwt
 
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"]
 )
 
-# Yardımcı Fonksiyon
-def create_profile_for_user(db: Session, user: models.User):
-    if user.role_id == 1: # Influencer
-        if not db.query(models.Influencer).filter(models.Influencer.id == user.id).first():
-            new_influencer = models.Influencer(id=user.id)
-            db.add(new_influencer)
-    elif user.role_id == 2: # Brand
-        if not db.query(models.Brand).filter(models.Brand.id == user.id).first():
-            new_brand = models.Brand(id=user.id, company_name=f"Marka {user.id}")
-            db.add(new_brand)
-    db.commit()
-
-
 # Kullanıcı Kayıt Endpoint'i
-@router.post("/register", response_model=user_schema.User) # Değişti
-def register_user(user_data: user_schema.UserCreate, db: Session = Depends(get_db)): # Değişti
-    db_user = db.query(models.User).filter(models.User.email == user_data.email).first()
+@router.post("/register", response_model=user_schema.User)
+def register_user(user_data: user_schema.UserCreate, db: Session = Depends(get_db)):
+    # Email kontrolü
+    db_user = db.query(User).filter(User.email == user_data.email).first()
     if db_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="E-posta zaten kayıtlı.")
     
+    # Şifreyi hashle (72 byte limiti otomatik yönetiliyor)
     hashed_password = get_password_hash(user_data.password)
     
-    new_user = models.User(
+    # Yeni kullanıcı oluştur
+    new_user = User(
         email=user_data.email,
         password_hashed=hashed_password,
-        role_id=user_data.role_id
+        role=user_data.role  # Enum tabanlı rol
     )
     
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     
-    create_profile_for_user(db, new_user)
+    # Rolüne göre profil oluştur
+    if new_user.role == RoleType.Influencer:
+        # Influencer için gerekli alanları kontrol et
+        if user_data.display_name:
+            new_influencer = Influencer(
+                id=new_user.id,
+                display_name=user_data.display_name,
+                instagram_username=user_data.instagram_username,
+                youtube_channel_url=user_data.youtube_channel_url,
+                tiktok_username=user_data.tiktok_username,
+                category=user_data.category,
+                bio=user_data.bio,
+                location=user_data.location,
+                target_age_range=user_data.target_age_range,
+                target_gender=user_data.target_gender
+            )
+            db.add(new_influencer)
+        else:
+            # Kullanıcıyı geri al
+            db.delete(new_user)
+            db.commit()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="Influencer kayıt için display_name alanı zorunludur."
+            )
+    
+    elif new_user.role == RoleType.Brand:
+        # Marka için company_name zorunlu
+        if user_data.company_name:
+            new_brand = Brand(
+                id=new_user.id,
+                company_name=user_data.company_name,
+                contact_person=user_data.contact_person,
+                phone_number=user_data.phone_number,
+                website_url=user_data.website_url,
+                industry=user_data.industry
+            )
+            db.add(new_brand)
+        else:
+            # Kullanıcıyı geri al
+            db.delete(new_user)
+            db.commit()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="Marka kayıt için company_name alanı zorunludur."
+            )
+    
+    # Profil ekleme işlemini kaydet
+    db.commit()
+    db.refresh(new_user)
     
     return new_user
 
 # Kullanıcı Giriş Endpoint'i
-@router.post("/login", response_model=auth_schema.Token) # Değişti
+@router.post("/login", response_model=auth_schema.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == form_data.username).first()
+    user = db.query(User).filter(User.email == form_data.username).first()
     
     if not user or not verify_password(form_data.password, user.password_hashed):
         raise HTTPException(
@@ -78,8 +126,39 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(user.id), "role_id": user.role_id},
+        data={"sub": str(user.id), "role": user.role.value},  # Enum değerini kullan
         expires_delta=access_token_expires
     )
     
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+# Kullanıcı Bilgisi Endpoint'i (Token ile)
+@router.get("/me", response_model=user_schema.User)
+async def get_current_user_info(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    """
+    Token ile giriş yapmış kullanıcının bilgilerini döndür
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Kimlik bilgileri doğrulanamadı",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id_str: str = payload.get("sub")
+        if user_id_str is None:
+            raise credentials_exception
+        user_id = int(user_id_str)
+    except (JWTError, ValueError):
+        raise credentials_exception
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise credentials_exception
+    
+    return user
