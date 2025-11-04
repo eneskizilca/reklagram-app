@@ -38,8 +38,8 @@ services:
       - backend
     networks:
       - reklagram_network
-    # Production mode kullan (build sırasında axios yüklendi)
-    command: yarn start
+    # Development mode - hot reload aktif
+    command: yarn dev
 
   # PostgreSQL Veritabanı Servisi
   db_postgres:

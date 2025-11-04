@@ -119,7 +119,6 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                placeholder="ornek@email.com"
               />
             </div>
 
@@ -136,7 +135,6 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                placeholder="••••••••"
               />
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- BURASI ÖNEMLİ ---
 from .database import engine
@@ -24,6 +25,15 @@ app = FastAPI(
     title="ReklaGram API",
     description="Influencer ve Marka işbirliği platformu için API",
     version="0.1.0",
+)
+
+# CORS Middleware - Frontend'den gelen isteklere izin ver
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Frontend URL'leri
+    allow_credentials=True,
+    allow_methods=["*"],  # Tüm HTTP metodlarına izin ver (GET, POST, OPTIONS, vb.)
+    allow_headers=["*"],  # Tüm header'lara izin ver
 )
 
 app.include_router(auth.router)

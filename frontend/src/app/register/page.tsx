@@ -189,7 +189,6 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="ornek@email.com"
               />
             </div>
 
@@ -205,7 +204,6 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="En az 6 karakter"
               />
             </div>
 
@@ -221,7 +219,6 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Şifrenizi tekrar girin"
               />
             </div>
           </div>
@@ -243,7 +240,6 @@ export default function RegisterPage() {
                   value={formData.display_name}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Adınız Soyadınız"
                 />
               </div>
 
@@ -259,7 +255,6 @@ export default function RegisterPage() {
                     value={formData.instagram_username}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="@kullaniciadi"
                   />
                 </div>
 
@@ -274,7 +269,6 @@ export default function RegisterPage() {
                     value={formData.tiktok_username}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="@kullaniciadi"
                   />
                 </div>
               </div>
@@ -290,7 +284,6 @@ export default function RegisterPage() {
                   value={formData.youtube_channel_url}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="https://youtube.com/@kanaliniz"
                 />
               </div>
 
@@ -329,7 +322,6 @@ export default function RegisterPage() {
                     value={formData.location}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="İstanbul, Turkey"
                   />
                 </div>
               </div>
@@ -345,7 +337,6 @@ export default function RegisterPage() {
                   value={formData.bio}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Kendinizi tanıtın..."
                 />
               </div>
             </div>
@@ -368,7 +359,6 @@ export default function RegisterPage() {
                   value={formData.company_name}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Şirket Adınız"
                 />
               </div>
 
@@ -407,7 +397,6 @@ export default function RegisterPage() {
                     value={formData.website_url}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="https://sirketiniz.com"
                   />
                 </div>
               </div>
@@ -424,7 +413,6 @@ export default function RegisterPage() {
                     value={formData.contact_person}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Adınız Soyadınız"
                   />
                 </div>
 
@@ -439,7 +427,6 @@ export default function RegisterPage() {
                     value={formData.phone_number}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="+90 555 123 4567"
                   />
                 </div>
               </div>
