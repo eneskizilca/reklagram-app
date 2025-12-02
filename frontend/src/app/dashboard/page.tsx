@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-// Import yolunu senin düzelttiğin gibi göreceli yol yapıyoruz:
 import { MOCK_DATA, fluctuateData, MockInfluencer } from '../../data/mockData';
 
 export default function DashboardPage() {
@@ -12,7 +11,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setInfluencers((currentData) => fluctuateData(currentData));
-    }, 2500); 
+    }, 2500); // 2.5 saniyede bir güncelle
 
     return () => clearInterval(interval);
   }, []);
@@ -63,16 +62,19 @@ export default function DashboardPage() {
       </div>
 
       {/* Tablo */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Kanal</th>
+              <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Platform</th>
               <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Influencer</th>
-              <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Trend</th>
-              <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Etkileşim %</th>
-              <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-500">İzlenme</th>
-              <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Beğeni</th>
+              <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Kategori</th>
+              
+              {/* YENİ SÜTUNLAR */}
+              <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-900 bg-blue-50/50">Canlı Takipçi</th>
+              <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Story (24s)</th>
+              <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Reels Etk.</th>
+              <th className="px-6 py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-500">Yaş Kitlesi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
@@ -93,54 +95,53 @@ export default function DashboardPage() {
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-900">{inf.fullName}</span>
                       <span className="text-xs text-gray-500">{inf.username}</span>
-                      <span className="mt-1 inline-flex w-fit items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800">
-                        {inf.category}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td className="whitespace-nowrap px-6 py-4">
-                    {inf.trend === 'up' ? (
-                      <span className="inline-flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-full text-xs font-bold">
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        Yükselişte
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-full text-xs font-bold">
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                        </svg>
-                        Düşüşte
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="whitespace-nowrap px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="h-2 w-16 rounded-full bg-gray-200">
-                        <div 
-                          className={`h-2 rounded-full ${inf.engagementRate > 5 ? 'bg-green-500' : 'bg-yellow-500'}`} 
-                          style={{ width: `${Math.min(inf.engagementRate * 10, 100)}%` }}
-                        ></div>
+                      {/* Trend Oku İsmin Yanına Geldi */}
+                      <div className="mt-1 flex items-center gap-1">
+                         {inf.trend === 'up' ? (
+                            <span className="text-[10px] font-bold text-green-600 flex items-center">
+                              <svg className="h-3 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                              Trend
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-red-600 flex items-center">
+                              <svg className="h-3 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>
+                              Düşüş
+                            </span>
+                          )}
                       </div>
-                      <span className="text-sm font-bold text-gray-700">%{inf.engagementRate}</span>
                     </div>
                   </td>
 
-                  <td className="whitespace-nowrap px-6 py-4 text-right font-mono text-sm font-medium text-gray-900">
-                    {inf.views.toLocaleString('tr-TR')}
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                    {inf.category}
                   </td>
+
+                  {/* TAKİPÇİ (YENİ VE CANLI) */}
+                  <td className="whitespace-nowrap px-6 py-4 text-right font-mono text-sm font-bold text-blue-700 bg-blue-50/30">
+                    {inf.followers.toLocaleString('tr-TR')}
+                  </td>
+
+                  {/* STORY İZLENME (YENİ) */}
+                  <td className="whitespace-nowrap px-6 py-4 text-right font-mono text-sm text-gray-700">
+                    {inf.storyAvgViews.toLocaleString('tr-TR')}
+                  </td>
+
+                  {/* REELS ETKİLEŞİM (YENİ) */}
                   <td className="whitespace-nowrap px-6 py-4 text-right font-mono text-sm text-gray-600">
-                    {inf.likes.toLocaleString('tr-TR')}
+                    {inf.reelsInteraction.toLocaleString('tr-TR')}
+                  </td>
+
+                  {/* YAŞ KİTLESİ (YENİ) */}
+                  <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                      {inf.audienceAge}
+                    </span>
                   </td>
                 </tr>
               ))
             ) : (
-              // Arama sonucu boşsa - İŞTE DÜZELTİLEN KISIM BURASI
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                   <p className="text-lg">🔍 &quot;{searchTerm}&quot; için sonuç bulunamadı.</p>
                 </td>
               </tr>
