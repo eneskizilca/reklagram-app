@@ -20,11 +20,11 @@ export interface MockInfluencer {
 
 export const MOCK_DATA: MockInfluencer[] = [
   // --- INSTAGRAM (10 Kişi) ---
-  { id: 1, platform: 'instagram', username: '@gezgincisena', fullName: 'Sena Ateş', category: 'Seyahat', likes: 12450, views: 45200, followers: 215400, storyAvgViews: 45000, reelsInteraction: 12500, audienceAge: '25-34', trend: 'up' },
+  { id: 1, platform: 'instagram', username: '@sanatsena', fullName: 'Sena Ateş', category: 'Sanat', likes: 12450, views: 45200, followers: 215400, storyAvgViews: 45000, reelsInteraction: 12500, audienceAge: '25-34', trend: 'up' },
   { id: 2, platform: 'instagram', username: '@gurme_emre', fullName: 'Emre Lezzet', category: 'Yemek', likes: 8340, views: 22100, followers: 156000, storyAvgViews: 32000, reelsInteraction: 8900, audienceAge: '18-24', trend: 'down' },
   { id: 3, platform: 'instagram', username: '@fit_caner', fullName: 'Caner Demir', category: 'Spor', likes: 25100, views: 80500, followers: 540200, storyAvgViews: 120000, reelsInteraction: 45000, audienceAge: '18-24', trend: 'up' },
   { id: 4, platform: 'instagram', username: '@modablog_zeynep', fullName: 'Zeynep Koç', category: 'Moda', likes: 4200, views: 12000, followers: 89000, storyAvgViews: 15000, reelsInteraction: 3200, audienceAge: '25-34', trend: 'down' },
-  { id: 5, platform: 'instagram', username: '@sanat_atolyesi', fullName: 'Ayşe Yılmaz', category: 'Sanat', likes: 15600, views: 35000, followers: 120500, storyAvgViews: 28000, reelsInteraction: 11000, audienceAge: '35-44', trend: 'up' },
+  { id: 5, platform: 'instagram', username: '@ayse_takici', fullName: 'Ayşe Yılmaz', category: 'Takıcı', likes: 15600, views: 35000, followers: 120500, storyAvgViews: 28000, reelsInteraction: 11000, audienceAge: '35-44', trend: 'up' },
   { id: 6, platform: 'instagram', username: '@teknoloji_rehberi', fullName: 'Mehmet Tekin', category: 'Teknoloji', likes: 9800, views: 18000, followers: 95000, storyAvgViews: 12000, reelsInteraction: 5600, audienceAge: '18-24', trend: 'down' },
   { id: 7, platform: 'instagram', username: '@doga_yuruyusu', fullName: 'Ali Dağlı', category: 'Doğa', likes: 32000, views: 90000, followers: 320000, storyAvgViews: 85000, reelsInteraction: 29000, audienceAge: '25-34', trend: 'up' },
   { id: 8, platform: 'instagram', username: '@kitap_kurdu_elif', fullName: 'Elif Okur', category: 'Edebiyat', likes: 5400, views: 10500, followers: 45000, storyAvgViews: 8900, reelsInteraction: 2100, audienceAge: '18-24', trend: 'up' },

@@ -8,6 +8,7 @@ from .user import User
 from .influencer import Influencer
 from .brand import Brand
 from .collaboration import Collaboration
+from .metric import InfluencerMetric
 
 # Dışarıya export edilecek tüm öğeler
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "Influencer",
     "Brand",
     "Collaboration",
+    "InfluencerMetric",
 ]
