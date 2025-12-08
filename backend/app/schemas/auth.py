@@ -12,3 +12,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: Optional[str] = None
     role_id: Optional[int] = None
+
+# Şifremi unuttum için e-posta isteği
+class ForgotPasswordRequest(BaseModel):
+    email: str
