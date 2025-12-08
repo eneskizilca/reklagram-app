@@ -86,7 +86,7 @@ export default function LoginPage() {
           router.push('/influencer/home');
           break;
         case 'brand':
-          router.push('/brand/dashboard');
+          router.push('/brand/home');
           break;
         case 'superadmin':
           router.push('/admin/dashboard');
