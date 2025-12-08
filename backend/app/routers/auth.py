@@ -162,3 +162,33 @@ async def get_current_user_info(
         raise credentials_exception
     
     return user
+
+
+# Şifremi Unuttum Endpoint'i
+@router.post("/forgot-password")
+def forgot_password(email_data: auth_schema.ForgotPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Şifre sıfırlama için e-posta gönder
+    """
+    user = db.query(User).filter(User.email == email_data.email).first()
+    
+    # Güvenlik için kullanıcı bulunamasa bile başarılı response dön (email enumeration prevention)
+    if not user:
+        return {"message": "Eğer e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi."}
+    
+    # Reset token oluştur (24 saat geçerli)
+    reset_token_expires = timedelta(hours=24)
+    reset_token = create_access_token(
+        data={"sub": str(user.id), "type": "password_reset"},
+        expires_delta=reset_token_expires
+    )
+    
+    # TODO: E-posta gönderme servisi entegre edilecek
+    # Şimdilik sadece success response dön
+    # Email içeriği: http://localhost:3000/reset-password?token={reset_token}
+    
+    # Geliştirme ortamında token'ı console'a yazdır
+    print(f"Password reset token for {user.email}: {reset_token}")
+    print(f"Reset link: http://localhost:3000/reset-password?token={reset_token}")
+    
+    return {"message": "Eğer e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi."}
