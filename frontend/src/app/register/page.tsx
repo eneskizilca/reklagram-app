@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +12,8 @@ import {
   MapPin, 
   Building2, 
   Globe,
-  ArrowRight
+  ArrowRight,
+  ChevronDown
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import api from '@/lib/api';
@@ -41,6 +42,10 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [industryOpen, setIndustryOpen] = useState(false);
+  const categoryRef = useRef<HTMLDivElement>(null);
+  const industryRef = useRef<HTMLDivElement>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -64,6 +69,43 @@ export default function RegisterPage() {
     contact_person: '',
     phone_number: '',
   });
+
+  const categories = [
+    { value: 'Seyahat', label: '🌍 Seyahat' },
+    { value: 'Teknoloji', label: '💻 Teknoloji' },
+    { value: 'Moda', label: '👗 Moda' },
+    { value: 'Yemek', label: '🍔 Yemek' },
+    { value: 'Spor', label: '⚽ Spor' },
+    { value: 'Güzellik', label: '💄 Güzellik' },
+    { value: 'Oyun', label: '🎮 Oyun' },
+    { value: 'Eğitim', label: '📚 Eğitim' },
+  ];
+
+  const industries = [
+    { value: 'E-ticaret', label: '🛒 E-ticaret' },
+    { value: 'Moda', label: '👔 Moda' },
+    { value: 'Teknoloji', label: '⚡ Teknoloji' },
+    { value: 'Gıda', label: '🍕 Gıda' },
+    { value: 'Kozmetik', label: '✨ Kozmetik' },
+    { value: 'Otomotiv', label: '🚗 Otomotiv' },
+    { value: 'Finans', label: '💰 Finans' },
+    { value: 'Eğitim', label: '🎓 Eğitim' },
+  ];
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {
+        setCategoryOpen(false);
+      }
+      if (industryRef.current && !industryRef.current.contains(event.target as Node)) {
+        setIndustryOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -410,27 +452,59 @@ export default function RegisterPage() {
                           </div>
                         </div>
 
-                        <div>
-                          <label htmlFor="category" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-jakarta">
+                        <div ref={categoryRef}>
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-jakarta">
                             Kategori
                           </label>
-                          <select
-                            id="category"
-                            name="category"
-                            value={formData.category}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-gray-900 dark:text-white font-inter shadow-sm"
-                          >
-                            <option value="">Seçiniz</option>
-                            <option value="Seyahat">Seyahat</option>
-                            <option value="Teknoloji">Teknoloji</option>
-                            <option value="Moda">Moda</option>
-                            <option value="Yemek">Yemek</option>
-                            <option value="Spor">Spor</option>
-                            <option value="Güzellik">Güzellik</option>
-                            <option value="Oyun">Oyun</option>
-                            <option value="Eğitim">Eğitim</option>
-                          </select>
+                          <div className="relative">
+                            <motion.button
+                              type="button"
+                              onClick={() => setCategoryOpen(!categoryOpen)}
+                              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-gray-900 dark:text-white font-inter shadow-sm cursor-pointer hover:border-purple-400 dark:hover:border-purple-500 text-left flex items-center justify-between"
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <span className={!formData.category ? 'text-gray-400' : ''}>
+                                {formData.category ? categories.find(c => c.value === formData.category)?.label : 'Seçiniz'}
+                              </span>
+                              <motion.div
+                                animate={{ rotate: categoryOpen ? 180 : 0 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <ChevronDown className="w-5 h-5 text-gray-400" />
+                              </motion.div>
+                            </motion.button>
+                            
+                            <AnimatePresence>
+                              {categoryOpen && (
+                                <motion.div
+                                  initial={{ opacity: 0, scaleY: 0, originY: 0 }}
+                                  animate={{ opacity: 1, scaleY: 1, originY: 0 }}
+                                  exit={{ opacity: 0, scaleY: 0, originY: 0 }}
+                                  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                                  className="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
+                                >
+                                  <div className="max-h-60 overflow-y-auto py-1">
+                                    {categories.map((category, index) => (
+                                      <motion.button
+                                        key={category.value}
+                                        type="button"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.03 }}
+                                        onClick={() => {
+                                          setFormData({ ...formData, category: category.value });
+                                          setCategoryOpen(false);
+                                        }}
+                                        className="w-full px-4 py-3 text-left hover:bg-purple-50 dark:hover:bg-slate-700 transition-colors text-gray-900 dark:text-white font-inter"
+                                      >
+                                        {category.label}
+                                      </motion.button>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
                         </div>
 
                         <div>
@@ -554,27 +628,59 @@ export default function RegisterPage() {
                           </div>
                         </div>
 
-                        <div>
-                          <label htmlFor="industry" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-jakarta">
+                        <div ref={industryRef}>
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-jakarta">
                             Sektör
                           </label>
-                          <select
-                            id="industry"
-                            name="industry"
-                            value={formData.industry}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-gray-900 dark:text-white font-inter shadow-sm"
-                          >
-                            <option value="">Seçiniz</option>
-                            <option value="E-ticaret">E-ticaret</option>
-                            <option value="Moda">Moda</option>
-                            <option value="Teknoloji">Teknoloji</option>
-                            <option value="Gıda">Gıda</option>
-                            <option value="Kozmetik">Kozmetik</option>
-                            <option value="Otomotiv">Otomotiv</option>
-                            <option value="Finans">Finans</option>
-                            <option value="Eğitim">Eğitim</option>
-                          </select>
+                          <div className="relative">
+                            <motion.button
+                              type="button"
+                              onClick={() => setIndustryOpen(!industryOpen)}
+                              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-gray-900 dark:text-white font-inter shadow-sm cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 text-left flex items-center justify-between"
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <span className={!formData.industry ? 'text-gray-400' : ''}>
+                                {formData.industry ? industries.find(i => i.value === formData.industry)?.label : 'Seçiniz'}
+                              </span>
+                              <motion.div
+                                animate={{ rotate: industryOpen ? 180 : 0 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <ChevronDown className="w-5 h-5 text-gray-400" />
+                              </motion.div>
+                            </motion.button>
+                            
+                            <AnimatePresence>
+                              {industryOpen && (
+                                <motion.div
+                                  initial={{ opacity: 0, scaleY: 0, originY: 0 }}
+                                  animate={{ opacity: 1, scaleY: 1, originY: 0 }}
+                                  exit={{ opacity: 0, scaleY: 0, originY: 0 }}
+                                  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                                  className="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
+                                >
+                                  <div className="max-h-60 overflow-y-auto py-1">
+                                    {industries.map((industry, index) => (
+                                      <motion.button
+                                        key={industry.value}
+                                        type="button"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.03 }}
+                                        onClick={() => {
+                                          setFormData({ ...formData, industry: industry.value });
+                                          setIndustryOpen(false);
+                                        }}
+                                        className="w-full px-4 py-3 text-left hover:bg-indigo-50 dark:hover:bg-slate-700 transition-colors text-gray-900 dark:text-white font-inter"
+                                      >
+                                        {industry.label}
+                                      </motion.button>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
                         </div>
                       </div>
 
