@@ -16,3 +16,7 @@ class TokenData(BaseModel):
 # Şifremi unuttum için e-posta isteği
 class ForgotPasswordRequest(BaseModel):
     email: str
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str

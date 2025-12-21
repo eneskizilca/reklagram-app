@@ -56,4 +56,16 @@ uvicorn==0.38.0
 uvloop==0.22.1
 watchfiles==1.1.1
 websockets==15.0.1
+<<<<<<< HEAD
 requests==2.31.0
+=======
+cryptography==46.0.3
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+passlib[bcrypt]
+python-jose[cryptography]
+python-dotenv
+fastapi-mail==1.4.1
+>>>>>>> 632249ca45d3185e88d75d5a2326651a7b00a6fa

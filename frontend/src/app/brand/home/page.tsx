@@ -106,7 +106,7 @@ export default function BrandHomePage() {
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       iconColor: 'text-blue-600 dark:text-blue-400',
       borderColor: 'border-blue-200 dark:border-blue-500/30',
-      link: '/brand/discover',
+      link: '/brand/explore',
       badge: '250+ Profil',
       badgeColor: 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
     },
@@ -207,7 +207,7 @@ export default function BrandHomePage() {
             {/* Desktop Menu Items */}
             <div className="hidden md:flex items-center space-x-6 font-inter">
               <Link 
-                href="/brand/discover"
+                href="/brand/explore"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
                 Influencer Keşfet
@@ -287,7 +287,7 @@ export default function BrandHomePage() {
           >
             <div className="px-4 py-3 space-y-2">
               <Link
-                href="/brand/discover"
+                href="/brand/explore"
                 onClick={() => setShowMobileMenu(false)}
                 className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
               >
