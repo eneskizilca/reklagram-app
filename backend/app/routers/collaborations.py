@@ -7,7 +7,7 @@ from ..models.user import User
 from ..models.brand import Brand
 from ..models.influencer import Influencer
 from ..schemas.collaboration import CollaborationCreate, CollaborationUpdate, CollaborationResponse
-from ..routers.auth import get_current_user
+from ..dependencies.auth import get_current_user
 
 router = APIRouter(
     prefix="/collaborations",
