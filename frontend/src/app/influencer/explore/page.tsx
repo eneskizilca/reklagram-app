@@ -778,7 +778,7 @@ export default function InfluencerExplore() {
                         </div>
                         <DatePicker
                           selected={applicationForm.availableDate}
-                          onChange={(date) => setApplicationForm({ ...applicationForm, availableDate: date })}
+                          onChange={(date: Date | null) => setApplicationForm({ ...applicationForm, availableDate: date })}
                           minDate={new Date()}
                           dateFormat="dd MMMM yyyy"
                           placeholderText="Tarih seçin..."
@@ -806,7 +806,7 @@ export default function InfluencerExplore() {
                         </div>
                         <DatePicker
                           selected={applicationForm.expectedDelivery}
-                          onChange={(date) => setApplicationForm({ ...applicationForm, expectedDelivery: date })}
+                          onChange={(date: Date | null) => setApplicationForm({ ...applicationForm, expectedDelivery: date })}
                           minDate={applicationForm.availableDate || new Date()}
                           dateFormat="dd MMMM yyyy"
                           placeholderText="Tarih seçin..."

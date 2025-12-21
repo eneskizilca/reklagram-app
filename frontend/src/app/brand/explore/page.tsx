@@ -665,14 +665,23 @@ export default function BrandExplore() {
                 </div>
               </div>
 
-              {/* Action Button */}
-              <button 
-                onClick={() => openCollaborationModal(influencer)}
-                className="w-full py-3 px-6 bg-gradient-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 dark:hover:shadow-indigo-500/50 transition-all flex items-center justify-center space-x-2 font-jakarta"
-              >
-                <span>İşbirliği Teklifi Gönder</span>
-                <Send className="w-4 h-4" />
-              </button>
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-2">
+                <Link
+                  href={`/dashboard/messages?userId=${influencer.id}&name=${encodeURIComponent(influencer.name)}`}
+                  className="w-full py-3 px-6 bg-gradient-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 dark:hover:shadow-indigo-500/50 transition-all flex items-center justify-center space-x-2 font-jakarta"
+                >
+                  <span>Mesaj Gönder</span>
+                  <Send className="w-4 h-4" />
+                </Link>
+                <button 
+                  onClick={() => openCollaborationModal(influencer)}
+                  className="w-full py-3 px-6 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center space-x-2 font-jakarta"
+                >
+                  <span>İşbirliği Teklifi Gönder</span>
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -800,7 +809,7 @@ export default function BrandExplore() {
                         </div>
                         <DatePicker
                           selected={collaborationForm.deadline}
-                          onChange={(date) => setCollaborationForm({ ...collaborationForm, deadline: date })}
+                          onChange={(date: Date | null) => setCollaborationForm({ ...collaborationForm, deadline: date })}
                           minDate={new Date()}
                           dateFormat="dd MMMM yyyy"
                           placeholderText="Tarih seçin..."
