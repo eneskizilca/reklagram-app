@@ -28,7 +28,9 @@ import {
   Sparkles,
   Send,
   CheckCircle2,
-  Calendar
+  Calendar,
+  MessageSquare,
+  MessageCircle
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 
@@ -665,14 +667,26 @@ export default function BrandExplore() {
                 </div>
               </div>
 
-              {/* Action Button */}
-              <button 
-                onClick={() => openCollaborationModal(influencer)}
-                className="w-full py-3 px-6 bg-gradient-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 dark:hover:shadow-indigo-500/50 transition-all flex items-center justify-center space-x-2 font-jakarta"
-              >
-                <span>İşbirliği Teklifi Gönder</span>
-                <Send className="w-4 h-4" />
-              </button>
+              {/* Action Buttons */}
+              <div className="grid grid-cols-5 gap-3">
+                <button 
+                  onClick={() => openCollaborationModal(influencer)}
+                  className="col-span-3 py-4 px-6 bg-gradient-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white rounded-2xl font-extrabold text-base hover:shadow-2xl hover:shadow-indigo-500/40 dark:hover:shadow-indigo-500/60 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-2 font-jakarta group"
+                >
+                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <span>İşbirliği Teklifi</span>
+                </button>
+                <button 
+                  onClick={() => {
+                    console.log('Mesaj gönder:', influencer.id);
+                    // TODO: Mesajlaşma sistemine yönlendir
+                  }}
+                  className="col-span-2 py-4 px-4 bg-white dark:bg-slate-700 text-[#7C3AED] dark:text-purple-400 border-2 border-[#7C3AED] dark:border-purple-500 rounded-2xl font-extrabold text-base hover:bg-[#7C3AED] hover:text-white dark:hover:bg-purple-600 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-1.5 font-jakarta group"
+                >
+                  <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span>Mesaj</span>
+                </button>
+              </div>
             </motion.div>
           ))}
         </div>
