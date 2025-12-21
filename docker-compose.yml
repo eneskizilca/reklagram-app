@@ -12,10 +12,14 @@ services:
       - ./backend:/app
     environment:
       DATABASE_URL: "postgresql://postgres:reklagram_pass@db_postgres:5432/reklagram_db"
-      SECRET_KEY: "bu-cok-gizli-bir-anahtar-ve-uzun-olmasi-gerekir-12345" # <-- Bu satırın var olduğundan emin ol
+      SECRET_KEY: "bu-cok-gizli-bir-anahtar-ve-uzun-olmasi-gerekir-12345"
       ALGORITHM: "HS256"
       ACCESS_TOKEN_EXPIRE_MINUTES: "30"
-      # ... diğer environment değişkenleri
+      MAIL_USERNAME: "senaatesdev@gmail.com"
+      MAIL_PASSWORD: "buwm hyjs rdxb lyge"
+      MAIL_FROM: "senaatesdev@gmail.com"
+      MAIL_PORT: "587"
+      MAIL_SERVER: "smtp.gmail.com"
     depends_on:
       - db_postgres
     networks:

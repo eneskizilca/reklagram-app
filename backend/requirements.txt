@@ -61,6 +61,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 psycopg2-binary
-passlib[bcrypt]         # Bu önemli! bcrypt desteği ekler
-python-jose[cryptography] # JWT ve kriptografik işlemler için önemli
+passlib[bcrypt]
+python-jose[cryptography]
 python-dotenv
+fastapi-mail==1.4.1

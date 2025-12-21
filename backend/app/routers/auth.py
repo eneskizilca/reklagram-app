@@ -28,6 +28,7 @@ from ..dependencies.auth import (
 )
 
 from jose import JWTError, jwt
+from ..utils.email import send_password_reset_email
 
 router = APIRouter(
     prefix="/auth",
@@ -166,7 +167,7 @@ async def get_current_user_info(
 
 # Şifremi Unuttum Endpoint'i
 @router.post("/forgot-password")
-def forgot_password(email_data: auth_schema.ForgotPasswordRequest, db: Session = Depends(get_db)):
+async def forgot_password(email_data: auth_schema.ForgotPasswordRequest, db: Session = Depends(get_db)):
     """
     Şifre sıfırlama için e-posta gönder
     """
@@ -183,12 +184,68 @@ def forgot_password(email_data: auth_schema.ForgotPasswordRequest, db: Session =
         expires_delta=reset_token_expires
     )
     
-    # TODO: E-posta gönderme servisi entegre edilecek
-    # Şimdilik sadece success response dön
-    # Email içeriği: http://localhost:3000/reset-password?token={reset_token}
+    # E-posta gönder
+    email_sent = await send_password_reset_email(user.email, reset_token)
     
     # Geliştirme ortamında token'ı console'a yazdır
     print(f"Password reset token for {user.email}: {reset_token}")
     print(f"Reset link: http://localhost:3000/reset-password?token={reset_token}")
+    print(f"Email sent: {email_sent}")
     
     return {"message": "Eğer e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi."}
+
+
+# Şifre Sıfırlama Endpoint'i
+@router.post("/reset-password")
+def reset_password(reset_data: auth_schema.ResetPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Token ile şifre sıfırlama
+    """
+    try:
+        # Token'ı decode et
+        payload = jwt.decode(reset_data.token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        
+        # Token tipini kontrol et
+        if token_type != "password_reset":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Geçersiz token"
+            )
+        
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Geçersiz token"
+            )
+        
+        # Kullanıcıyı bul
+        user = db.query(User).filter(User.id == int(user_id)).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Kullanıcı bulunamadı"
+            )
+        
+        # Yeni şifreyi hashle ve güncelle
+        old_hash = user.password_hashed
+        new_hash = get_password_hash(reset_data.new_password)
+        user.password_hashed = new_hash
+        
+        print(f"Password reset for user {user.email} (ID: {user.id})")
+        print(f"Old hash: {old_hash[:50]}...")
+        print(f"New hash: {new_hash[:50]}...")
+        
+        db.commit()
+        db.refresh(user)
+        
+        print(f"After commit, current hash: {user.password_hashed[:50]}...")
+        
+        return {"message": "Şifreniz başarıyla güncellendi"}
+        
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token süresi dolmuş veya geçersiz"
+        )
