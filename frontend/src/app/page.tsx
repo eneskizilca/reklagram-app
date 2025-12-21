@@ -33,7 +33,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-3 cursor-pointer">
               <div className="relative w-10 h-10">
                 <Image
                   src="/reklagram-logo.png"
@@ -51,20 +51,20 @@ export default function LandingPage() {
 
             {/* Auth Buttons */}
             <div className="flex items-center space-x-4">
-              <Link href="/login">
+              <Link href="/login" className="cursor-pointer">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-5 py-2 text-sm font-semibold text-[#1A2A6C] dark:text-white hover:text-opacity-80 border border-gray-300 dark:border-slate-600 rounded-full hover:border-gray-400 dark:hover:border-slate-500 transition-all font-inter"
+                  className="px-5 py-2 text-sm font-semibold text-[#1A2A6C] dark:text-white hover:text-opacity-80 border border-gray-300 dark:border-slate-600 rounded-full hover:border-gray-400 dark:hover:border-slate-500 transition-all font-inter cursor-pointer"
                 >
                   Giriş Yap
                 </motion.button>
               </Link>
-              <Link href="/register">
+              <Link href="/register" className="cursor-pointer">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-5 py-2 text-sm font-semibold text-white bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] rounded-full shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 dark:shadow-indigo-500/50 dark:hover:shadow-indigo-500/60 transition-all font-inter"
+                  className="px-5 py-2 text-sm font-semibold text-white bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] rounded-full shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 dark:shadow-indigo-500/50 dark:hover:shadow-indigo-500/60 transition-all font-inter cursor-pointer"
                 >
                   Hemen Başla
                 </motion.button>
@@ -129,7 +129,7 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <Link href="/register?role=influencer">
+              <Link href="/register?role=influencer" className="cursor-pointer">
                 <motion.button
                   initial={{ rotate: 0 }}
                   whileHover={{ 
@@ -145,13 +145,13 @@ export default function LandingPage() {
                     }
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="group px-8 py-4 bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white font-bold rounded-full shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40 dark:shadow-indigo-500/50 dark:hover:shadow-purple-500/60 transition-shadow flex items-center space-x-2 w-full sm:w-auto font-jakarta"
+                  className="group px-8 py-4 bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white font-bold rounded-full shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40 dark:shadow-indigo-500/50 dark:hover:shadow-purple-500/60 transition-shadow flex items-center space-x-2 w-full sm:w-auto font-jakarta cursor-pointer"
                 >
                   <span>Influencer Olarak Katıl</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </motion.button>
               </Link>
-              <Link href="/register?role=brand">
+              <Link href="/register?role=brand" className="cursor-pointer">
                 <motion.button
                   initial={{ rotate: 0 }}
                   whileHover={{ 
@@ -167,7 +167,7 @@ export default function LandingPage() {
                     }
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="group px-8 py-4 bg-white dark:bg-slate-800 text-[#1A2A6C] dark:text-white font-bold rounded-full shadow-xl shadow-gray-300/50 dark:shadow-slate-700/50 hover:shadow-2xl border border-gray-200 dark:border-slate-700 transition-shadow flex items-center space-x-2 w-full sm:w-auto font-jakarta"
+                  className="group px-8 py-4 bg-white dark:bg-slate-800 text-[#1A2A6C] dark:text-white font-bold rounded-full shadow-xl shadow-gray-300/50 dark:shadow-slate-700/50 hover:shadow-2xl border border-gray-200 dark:border-slate-700 transition-shadow flex items-center space-x-2 w-full sm:w-auto font-jakarta cursor-pointer"
                 >
                   <span>Marka Olarak Keşfet</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
@@ -338,20 +338,20 @@ export default function LandingPage() {
               ReklaGram ile influencer pazarlamasında yeni standardı yaratın. Bugün başlayın.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/register">
+              <Link href="/register" className="cursor-pointer">
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-white text-[#1A2A6C] font-bold rounded-full shadow-xl hover:shadow-2xl transition-all w-full sm:w-auto font-jakarta"
+                  className="px-8 py-4 bg-white text-[#1A2A6C] font-bold rounded-full shadow-xl hover:shadow-2xl transition-all w-full sm:w-auto font-jakarta cursor-pointer"
                 >
                   Ücretsiz Hesap Oluştur
                 </motion.button>
             </Link>
-              <Link href="/login">
+              <Link href="/login" className="cursor-pointer">
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white/10 transition-all w-full sm:w-auto font-jakarta"
+                  className="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white/10 transition-all w-full sm:w-auto font-jakarta cursor-pointer"
                 >
                   Zaten Hesabım Var
                 </motion.button>
@@ -388,8 +388,8 @@ export default function LandingPage() {
             <div>
               <h4 className="text-[#1A2A6C] dark:text-white font-semibold mb-4 font-jakarta">Platform</h4>
               <ul className="space-y-2 text-sm font-inter">
-                <li><Link href="/register" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors">Kayıt Ol</Link></li>
-                <li><Link href="/login" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors">Giriş Yap</Link></li>
+                <li><Link href="/register" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors cursor-pointer">Kayıt Ol</Link></li>
+                <li><Link href="/login" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors cursor-pointer">Giriş Yap</Link></li>
               </ul>
             </div>
 
@@ -397,9 +397,9 @@ export default function LandingPage() {
             <div>
               <h4 className="text-[#1A2A6C] dark:text-white font-semibold mb-4 font-jakarta">Sosyal Medya</h4>
               <ul className="space-y-2 text-sm font-inter">
-                <li><a href="#" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors">Instagram</a></li>
-                <li><a href="#" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors">LinkedIn</a></li>
-                <li><a href="#" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors">Twitter</a></li>
+                <li><a href="#" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors cursor-pointer">Instagram</a></li>
+                <li><a href="#" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors cursor-pointer">LinkedIn</a></li>
+                <li><a href="#" className="hover:text-[#1A2A6C] dark:hover:text-white transition-colors cursor-pointer">Twitter</a></li>
               </ul>
         </div>
       </div>
