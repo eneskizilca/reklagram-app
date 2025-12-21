@@ -19,7 +19,7 @@ from .models.collaboration import Collaboration
 Base.metadata.create_all(bind=engine)
 # --- BURASI ÖNEMLİ SONU ---
 
-from .routers import auth, instagram
+from .routers import auth, instagram, collaborations
 
 app = FastAPI(
     title="ReklaGram API",
@@ -38,6 +38,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(instagram.router)
+app.include_router(collaborations.router)
 
 @app.get("/", tags=["Root"])
 def read_root():

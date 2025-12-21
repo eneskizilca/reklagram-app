@@ -176,7 +176,7 @@ export default function InfluencerHome() {
                 href="/influencer/explore"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
-                Keşfet / İlanlar
+                Keşfet
               </Link>
               <Link 
                 href="/influencer/collaborations"
@@ -251,7 +251,7 @@ export default function InfluencerHome() {
                 onClick={() => setShowMobileMenu(false)}
                 className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
               >
-                Keşfet / İlanlar
+                Keşfet
               </Link>
               <Link
                 href="/influencer/collaborations"

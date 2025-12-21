@@ -315,7 +315,7 @@ export default function InfluencerExplore() {
                 href="/influencer/explore"
                 className="text-[#1A2A6C] dark:text-white hover:text-[#7C3AED] dark:hover:text-[#A78BFA] font-semibold transition-colors border-b-2 border-[#1A2A6C] dark:border-white pb-1"
               >
-                Keşfet / İlanlar
+                Keşfet
               </Link>
               <Link 
                 href="/influencer/collaborations"
@@ -390,7 +390,7 @@ export default function InfluencerExplore() {
                 onClick={() => setShowMobileMenu(false)}
                 className="flex px-4 py-3 text-[#1A2A6C] dark:text-white bg-gray-100 dark:bg-slate-700 rounded-lg font-semibold font-inter"
               >
-                Keşfet / İlanlar
+                Keşfet
               </Link>
               <Link
                 href="/influencer/collaborations"

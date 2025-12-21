@@ -135,6 +135,19 @@ export default function BrandHomePage() {
       link: '/brand/proposals',
       badge: '8 Bekleyen',
       badgeColor: 'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300'
+    },
+    {
+      id: 4,
+      title: 'İşbirliklerim',
+      description: '5 aktif işbirliği devam ediyor',
+      icon: Briefcase,
+      color: 'from-emerald-500 to-teal-600',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-900/20',
+      iconColor: 'text-emerald-600 dark:text-emerald-400',
+      borderColor: 'border-emerald-200 dark:border-emerald-500/30',
+      link: '/brand/collaborations',
+      badge: '5 Aktif',
+      badgeColor: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300'
     }
   ];
 
@@ -210,13 +223,19 @@ export default function BrandHomePage() {
                 href="/brand/explore"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
-                Influencer Keşfet
+                Keşfet
               </Link>
               <Link 
                 href="/brand/campaigns"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
                 Kampanyalarım
+              </Link>
+              <Link 
+                href="/brand/collaborations"
+                className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
+              >
+                İşbirliklerim
               </Link>
               <Link 
                 href="/brand/analytics"
@@ -299,6 +318,13 @@ export default function BrandHomePage() {
                 className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
               >
                 Kampanyalarım
+              </Link>
+              <Link
+                href="/brand/collaborations"
+                onClick={() => setShowMobileMenu(false)}
+                className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
+              >
+                İşbirliklerim
               </Link>
               <Link
                 href="/brand/analytics"
