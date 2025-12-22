@@ -29,8 +29,13 @@ import {
   ArrowRight,
   Clock,
   Sparkles
+  User // 👈 EKLENDİ: Profil ikonu için
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
+
+
+// 👇 CÜZDAN BİLEŞENİ
+import WalletCard from "@/components/dashboard/WalletCard";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -241,28 +246,25 @@ export default function BrandHomePage() {
                   </div>
                   <span className="font-semibold font-jakarta">{companyName}</span>
                 </button>
-
-                {/* Dropdown */}
+                
+                {/* 🛠️ DROPDOWN MENÜ: DÜZELTİLDİ */}
                 {showProfileMenu && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden"
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
                   >
-                    <Link
-                      href="/brand/profile"
-                      className="flex items-center space-x-2 px-4 py-3 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors font-inter text-gray-700 dark:text-gray-300"
-                      onClick={() => setShowProfileMenu(false)}
-                    >
-                      <Briefcase className="w-4 h-4" />
-                      <span>Şirket Bilgileri</span>
+                    {/* ✅ Profilim Linki Eklendi */}
+                    <Link href="/brand/profile" className="flex items-center space-x-2 px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100 transition-colors">
+                      <User className="w-4 h-4" /> 
+                      <span className="font-medium">Profilim</span>
                     </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors font-inter cursor-pointer"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span>Çıkış Yap</span>
+
+                    {/* Çıkış Yap Butonu */}
+                    <button onClick={handleLogout} className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 text-red-600 transition-colors">
+                      <LogOut className="w-4 h-4" /> 
+                      <span className="font-medium">Çıkış Yap</span>
+
                     </button>
                   </motion.div>
                 )}
@@ -294,6 +296,7 @@ export default function BrandHomePage() {
               >
                 Raporlar
               </Link>
+
             </div>
           </motion.div>
         )}
@@ -342,6 +345,7 @@ export default function BrandHomePage() {
               </p>
             </motion.div>
           ))}
+
         </div>
 
         {/* Quick Action Cards */}
