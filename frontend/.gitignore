@@ -12,6 +12,15 @@
 
 # testing
 /coverage
+.env
+.env.local
+.env.example
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+.env.staging.local
 
 # next.js
 /.next/
