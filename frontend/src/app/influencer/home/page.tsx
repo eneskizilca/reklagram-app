@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { 
-  LineChart, 
-  TrendingUp, 
-  FileText, 
-  Bell, 
+import {
+  LineChart,
+  TrendingUp,
+  FileText,
+  Bell,
   LogOut,
   Sparkles,
   ArrowRight,
@@ -21,6 +21,8 @@ import {
   X as CloseIcon
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
+import api from '@/lib/api';
+import type { User } from '@/types/auth';
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -46,17 +48,38 @@ export default function InfluencerHome() {
     // Auth kontrolü
     const token = localStorage.getItem('access_token');
     const role = localStorage.getItem('user_role');
-    const email = localStorage.getItem('user_email');
+    const storedName = localStorage.getItem('user_name');
 
     if (!token || role !== 'influencer') {
       router.push('/login');
       return;
     }
 
-    // Email'den isim çıkar (mock olarak)
-    if (email) {
-      const name = email.split('@')[0];
-      setUserName(name.charAt(0).toUpperCase() + name.slice(1));
+    if (storedName) {
+      setUserName(storedName);
+    } else {
+      // İsim yoksa fetch et
+      const fetchUser = async () => {
+        try {
+          const response = await api.get<User>('/auth/me');
+          const user = response.data;
+
+          let name = '';
+          if (user.display_name) {
+            name = user.display_name;
+            localStorage.setItem('user_name', name);
+          } else {
+            // Fallback
+            name = user.email.split('@')[0];
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+          }
+          setUserName(name);
+        } catch (error) {
+          console.error('Failed to fetch user', error);
+        }
+      };
+
+      fetchUser();
     }
   }, [router]);
 
@@ -172,13 +195,13 @@ export default function InfluencerHome() {
 
             {/* Desktop Menu Items */}
             <div className="hidden md:flex items-center space-x-6 font-inter">
-              <Link 
+              <Link
                 href="/influencer/explore"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
                 Keşfet
               </Link>
-              <Link 
+              <Link
                 href="/influencer/collaborations"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
@@ -197,42 +220,42 @@ export default function InfluencerHome() {
               </button>
 
               {/* Profile Menu */}
-            <div className="relative profile-menu-container">
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-2 px-4 py-2 rounded-full bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white hover:shadow-lg transition-all cursor-pointer"
-              >
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center font-bold">
-                  {userName.charAt(0)}
-                </div>
-                <span className="font-semibold font-jakarta">{userName}</span>
-              </button>
-
-              {/* Dropdown */}
-              {showProfileMenu && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden"
+              <div className="relative profile-menu-container">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-full bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white hover:shadow-lg transition-all cursor-pointer"
                 >
-                  <Link
-                    href="/influencer/profile"
-                    className="flex items-center space-x-2 px-4 py-3 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors font-inter text-gray-700 dark:text-gray-300"
-                    onClick={() => setShowProfileMenu(false)}
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center font-bold">
+                    {userName.charAt(0)}
+                  </div>
+                  <span className="font-semibold font-jakarta">{userName}</span>
+                </button>
+
+                {/* Dropdown */}
+                {showProfileMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden"
                   >
-                    <FileText className="w-4 h-4" />
-                    <span>Profilim</span>
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors font-inter cursor-pointer"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Çıkış Yap</span>
-                  </button>
-                </motion.div>
-              )}
-            </div>
+                    <Link
+                      href="/influencer/profile"
+                      className="flex items-center space-x-2 px-4 py-3 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors font-inter text-gray-700 dark:text-gray-300"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>Profilim</span>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors font-inter cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Çıkış Yap</span>
+                    </button>
+                  </motion.div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -344,17 +367,15 @@ export default function InfluencerHome() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.8 + tip.id * 0.1 }}
-                className={`flex items-start space-x-3 p-4 rounded-xl ${
-                  tip.type === 'success' 
-                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/30' 
-                    : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/30'
-                }`}
+                className={`flex items-start space-x-3 p-4 rounded-xl ${tip.type === 'success'
+                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/30'
+                  : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/30'
+                  }`}
               >
-                <tip.icon className={`w-5 h-5 mt-0.5 ${
-                  tip.type === 'success' 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-yellow-600 dark:text-yellow-400'
-                }`} />
+                <tip.icon className={`w-5 h-5 mt-0.5 ${tip.type === 'success'
+                  ? 'text-green-600 dark:text-green-400'
+                  : 'text-yellow-600 dark:text-yellow-400'
+                  }`} />
                 <p className="text-gray-700 dark:text-gray-300 font-inter">
                   {tip.text}
                 </p>

@@ -55,6 +55,10 @@ class User(BaseModel):
     email: EmailStr
     is_active: bool
     role: RoleType  # Enum tabanlı rol
+    
+    # Profil bilgileri (Optional)
+    display_name: Optional[str] = None
+    company_name: Optional[str] = None
 
     class Config:
         # Bu, Pydantic'in SQLAlchemy modelleri ile uyumlu çalışmasını sağlar.

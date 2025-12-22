@@ -28,7 +28,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -79,6 +79,17 @@ export default function LoginPage() {
       // Role'ü kaydet
       localStorage.setItem('user_role', user.role);
       localStorage.setItem('user_email', user.email);
+
+      // Kullanıcı adını kaydet
+      if (user.role === 'influencer' && user.display_name) {
+        localStorage.setItem('user_name', user.display_name);
+      } else if (user.role === 'brand' && user.company_name) {
+        localStorage.setItem('user_name', user.company_name);
+      } else {
+        // Fallback olarak email'den isim çıkar
+        const name = user.email.split('@')[0];
+        localStorage.setItem('user_name', name.charAt(0).toUpperCase() + name.slice(1));
+      }
 
       // Role'e göre yönlendir
       switch (user.role) {
@@ -295,7 +306,7 @@ export default function LoginPage() {
                       whileHover={{ x: '100%' }}
                       transition={{ duration: 0.6 }}
                     />
-                    
+
                     {loading ? (
                       <>
                         <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

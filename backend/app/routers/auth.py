@@ -166,6 +166,12 @@ async def get_current_user_info(
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
         raise credentials_exception
+        
+    # Profil bilgilerini ekle
+    if user.role == RoleType.Influencer and user.influencer:
+        user.display_name = user.influencer.display_name
+    elif user.role == RoleType.Brand and user.brand:
+        user.company_name = user.brand.company_name
     
     return user
 

@@ -45,5 +45,7 @@ export interface User {
   email: string;
   is_active: boolean;
   role: RoleType;
+  display_name?: string;
+  company_name?: string;
 }
 
