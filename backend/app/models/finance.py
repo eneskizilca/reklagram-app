@@ -7,13 +7,11 @@ from sqlalchemy.sql import func
 from decimal import Decimal
 from .base import Base
 
-
 class TransactionType(enum.Enum):
     DEPOSIT = "deposit"
     PAYMENT_ESCROW = "payment_escrow"
     PAYOUT_INFLUENCER = "payout_influencer"
     PAYOUT_PLATFORM = "payout_platform"
-
 
 class TransactionStatus(enum.Enum):
     PENDING = "pending"
@@ -21,9 +19,8 @@ class TransactionStatus(enum.Enum):
     FAILED = "failed"
     CANCELLED = "cancelled"
 
-
 class Wallet(Base):
-    __tablename__ = "finance_wallets"
+    __tablename__ = "finance_wallets"  # 👈 Tablo adı burada belirlendi
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
@@ -36,15 +33,18 @@ class Wallet(Base):
     def __repr__(self):
         return f"<Wallet(id={self.id}, user_id={self.user_id}, balance={self.balance})>"
 
-
 class Transaction(Base):
     __tablename__ = "finance_transactions"
     
     id = Column(Integer, primary_key=True, index=True)
-    wallet_id = Column(Integer, ForeignKey("wallets.id"), nullable=False)
+    
+    # 🛠️ DÜZELTİLEN YER: "wallets.id" yerine "finance_wallets.id" yaptık.
+    wallet_id = Column(Integer, ForeignKey("finance_wallets.id"), nullable=False)
+    
     collaboration_id = Column(Integer, ForeignKey("collaborations.id"), nullable=True)
     amount = Column(Numeric(10, 2), nullable=False)
     description = Column(Text, nullable=True)
+    
     type = Column(
         SQLEnum(TransactionType, values_callable=lambda x: [e.value for e in x], name="transaction_type"),
         nullable=False
@@ -62,4 +62,3 @@ class Transaction(Base):
     
     def __repr__(self):
         return f"<Transaction(id={self.id}, wallet_id={self.wallet_id}, amount={self.amount}, type={self.type.value}, status={self.status.value})>"
-

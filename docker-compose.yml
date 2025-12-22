@@ -48,7 +48,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: reklagram_pass
+      POSTGRES_PASSWORD:
       POSTGRES_DB: reklagram_db
     volumes:
       - db_data:/var/lib/postgresql/data

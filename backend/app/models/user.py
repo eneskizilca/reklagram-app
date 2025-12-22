@@ -19,5 +19,8 @@ class User(Base):
     influencer = relationship("Influencer", back_populates="user", uselist=False)
     brand = relationship("Brand", back_populates="user", uselist=False)
     
+    # uselist=False diyoruz çünkü bir kullanıcının sadece 1 cüzdanı olur.
+    wallet = relationship("Wallet", back_populates="user", uselist=False)
+
     def __repr__(self):
         return f"<User(id={self.id}, email='{self.email}', role='{self.role.value}')>"
