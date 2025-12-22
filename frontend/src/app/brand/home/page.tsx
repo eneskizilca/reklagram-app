@@ -28,8 +28,9 @@ import {
   AlertCircle,
   ArrowRight,
   Clock,
-  Sparkles
-  User // 👈 EKLENDİ: Profil ikonu için
+  Sparkles,
+  User, 
+   // 👈 EKLENDİ: Profil ikonu için
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 
