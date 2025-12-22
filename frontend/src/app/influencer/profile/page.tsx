@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+// 👇 CÜZDAN IMPORT EDİLDİ
+import WalletCard from "@/components/dashboard/WalletCard";
 import { 
   FileText, 
   LogOut,
@@ -14,14 +16,9 @@ import {
   Youtube,
   Music2,
   TrendingUp,
-  Users,
-  Eye,
-  Heart,
+  Tag,
   Mail,
   MapPin,
-  Tag,
-  LinkIcon,
-  AlertCircle,
   CheckCircle2,
   Edit3,
   X,
@@ -30,7 +27,7 @@ import {
   Menu
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -150,6 +147,7 @@ export default function InfluencerProfile() {
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('token'); // 👈 BUNU EKLE (Eski kalıntıları siler)
     localStorage.removeItem('token_type');
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_email');
@@ -169,7 +167,6 @@ export default function InfluencerProfile() {
   };
 
   const handleSaveProfile = () => {
-    // Profili güncelle
     setProfile({
       ...profile,
       display_name: editForm.display_name,
@@ -211,7 +208,6 @@ export default function InfluencerProfile() {
     setShowCategoryDropdown(false);
   };
 
-  // Dropdown dışına tıklayınca kapat (kategori dropdown)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -231,7 +227,6 @@ export default function InfluencerProfile() {
 
   return (
     <div className={`${plusJakarta.variable} ${inter.variable} min-h-screen bg-[#F8F9FD] dark:bg-slate-900`}>
-      {/* Navbar - Home ile aynı */}
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -255,7 +250,6 @@ export default function InfluencerProfile() {
               </span>
             </Link>
 
-            {/* Desktop Menu Items */}
             <div className="hidden md:flex items-center space-x-6 font-inter">
               <Link 
                 href="/influencer/explore"
@@ -271,9 +265,7 @@ export default function InfluencerProfile() {
               </Link>
             </div>
 
-            {/* Mobile Menu & Profile */}
             <div className="flex items-center space-x-2">
-              {/* Mobile Menu Button */}
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
                 className="md:hidden p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
@@ -320,7 +312,6 @@ export default function InfluencerProfile() {
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
         {showMobileMenu && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -348,9 +339,7 @@ export default function InfluencerProfile() {
         )}
       </motion.nav>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -374,7 +363,6 @@ export default function InfluencerProfile() {
             className="lg:col-span-1"
           >
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border border-gray-200/50 dark:border-slate-700/50 shadow-lg sticky top-24">
-              {/* Profile Photo with Edit Icon */}
               <div className="flex justify-center mb-6">
                 <div className="relative">
                   <div className="w-32 h-32 rounded-full bg-linear-to-br from-[#1A2A6C] via-[#7C3AED] to-[#F97316] p-1">
@@ -384,7 +372,6 @@ export default function InfluencerProfile() {
                       </div>
                     </div>
                   </div>
-                  {/* Edit Icon Button */}
                   <button
                     onClick={handleEditProfile}
                     className="absolute bottom-0 right-0 w-10 h-10 bg-linear-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] rounded-full flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all cursor-pointer shadow-md"
@@ -394,7 +381,6 @@ export default function InfluencerProfile() {
                 </div>
               </div>
 
-              {/* Name & Username */}
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-[#1A2A6C] dark:text-white mb-1 font-jakarta">
                   {profile.display_name}
@@ -404,12 +390,10 @@ export default function InfluencerProfile() {
                 </p>
               </div>
 
-              {/* Bio */}
               <p className="text-gray-700 dark:text-gray-300 text-sm mb-6 font-inter text-center">
                 {profile.bio}
               </p>
 
-              {/* Info Tags */}
               <div className="space-y-3 mb-6">
                 <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
                   <Tag className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -425,7 +409,6 @@ export default function InfluencerProfile() {
                 </div>
               </div>
 
-              {/* Quick Stats */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center">
                   <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-jakarta">
@@ -445,6 +428,16 @@ export default function InfluencerProfile() {
 
           {/* Sağ: Analiz ve Media Kit */}
           <div className="lg:col-span-2 space-y-6">
+            
+            {/* 💳 CÜZDAN KARTI - INFLUENCER MODU (PARA ÇEK) 💳 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+            >
+              <WalletCard userType="influencer" />
+            </motion.div>
+
             {/* Media Kit Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -481,7 +474,6 @@ export default function InfluencerProfile() {
               </div>
             </motion.div>
 
-            {/* Growth Chart */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -518,9 +510,7 @@ export default function InfluencerProfile() {
               </ResponsiveContainer>
             </motion.div>
 
-            {/* Demographics */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Age Demographics */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -547,7 +537,6 @@ export default function InfluencerProfile() {
                 </ResponsiveContainer>
               </motion.div>
 
-              {/* Gender Demographics */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -584,7 +573,6 @@ export default function InfluencerProfile() {
               </motion.div>
             </div>
 
-            {/* Connected Accounts */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -596,7 +584,6 @@ export default function InfluencerProfile() {
               </h3>
 
               <div className="space-y-4">
-                {/* Instagram */}
                 <div className="flex items-center justify-between p-4 bg-linear-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl border border-purple-200 dark:border-purple-500/30">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-linear-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
@@ -625,7 +612,6 @@ export default function InfluencerProfile() {
                   )}
                 </div>
 
-                {/* YouTube */}
                 <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-500/30">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
@@ -654,7 +640,6 @@ export default function InfluencerProfile() {
                   )}
                 </div>
 
-                {/* TikTok */}
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700/50 rounded-xl border border-gray-200 dark:border-slate-600">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-900 dark:bg-gray-800 rounded-xl flex items-center justify-center">
@@ -688,7 +673,6 @@ export default function InfluencerProfile() {
         </div>
       </main>
 
-      {/* Edit Profile Modal */}
       {showEditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <motion.div
@@ -696,7 +680,6 @@ export default function InfluencerProfile() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-thin"
           >
-            {/* Modal Header */}
             <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 p-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-[#1A2A6C] dark:text-white font-jakarta">
                 Profili Düzenle
@@ -709,15 +692,12 @@ export default function InfluencerProfile() {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="p-6 space-y-6">
-              {/* Personal Info Section */}
               <div>
                 <h3 className="text-lg font-bold text-[#1A2A6C] dark:text-white mb-4 font-jakarta">
                   Kişisel Bilgiler
                 </h3>
                 <div className="space-y-4">
-                  {/* Display Name */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       Görünen Ad
@@ -732,7 +712,6 @@ export default function InfluencerProfile() {
                     />
                   </div>
 
-                  {/* Bio */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       Biyografi
@@ -747,7 +726,6 @@ export default function InfluencerProfile() {
                     />
                   </div>
 
-                  {/* Category - Custom Dropdown */}
                   <div className="category-dropdown-container relative">
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       Kategori
@@ -764,7 +742,6 @@ export default function InfluencerProfile() {
                       <ChevronDown className={`w-5 h-5 transition-transform ${showCategoryDropdown ? 'rotate-180' : ''}`} />
                     </button>
 
-                    {/* Dropdown Menu */}
                     {showCategoryDropdown && (
                       <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -795,7 +772,6 @@ export default function InfluencerProfile() {
                     )}
                   </div>
 
-                  {/* Location */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       Konum
@@ -812,13 +788,11 @@ export default function InfluencerProfile() {
                 </div>
               </div>
 
-              {/* Social Media Accounts Section */}
               <div className="pt-6 border-t border-gray-200 dark:border-slate-700">
                 <h3 className="text-lg font-bold text-[#1A2A6C] dark:text-white mb-4 font-jakarta">
                   Sosyal Medya Hesapları
                 </h3>
                 <div className="space-y-4">
-                  {/* Instagram */}
                   <div>
                     <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       <Instagram className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -837,7 +811,6 @@ export default function InfluencerProfile() {
                     </div>
                   </div>
 
-                  {/* YouTube */}
                   <div>
                     <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       <Youtube className="w-4 h-4 text-red-600 dark:text-red-400" />
@@ -856,7 +829,6 @@ export default function InfluencerProfile() {
                     </div>
                   </div>
 
-                  {/* TikTok */}
                   <div>
                     <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 font-inter">
                       <Music2 className="w-4 h-4 text-gray-900 dark:text-gray-400" />
@@ -878,7 +850,6 @@ export default function InfluencerProfile() {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="sticky bottom-0 bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 p-6 flex items-center justify-end space-x-4">
               <button
                 onClick={() => setShowEditModal(false)}
@@ -899,4 +870,3 @@ export default function InfluencerProfile() {
     </div>
   );
 }
-

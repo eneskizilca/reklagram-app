@@ -1,9 +1,7 @@
-version: '3.8' # Docker Compose dosya formatının versiyonu
+version: '3.8'
+
 services:
-  # Backend Servisi (FastAPI uygulamamız)
-
-  # docker-compose.yml (sadece backend servisi kısmı)
-
+  # 1. Backend Servisi
   backend:
     build: ./backend
     ports:
@@ -25,9 +23,7 @@ services:
     networks:
       - reklagram_network
 
-  # Frontend Servisi (Next.js uygulamamız)
-  # docker-compose.yml (sadece frontend servisi)
-
+  # 2. Frontend Servisi
   frontend:
     build: ./frontend
     ports:
@@ -42,44 +38,54 @@ services:
       - backend
     networks:
       - reklagram_network
-    # Development mode - hot reload aktif
     command: yarn dev
 
-  # PostgreSQL Veritabanı Servisi
+  # 3. PostgreSQL Veritabanı
   db_postgres:
-    image: timescale/timescaledb:latest-pg14 # TimescaleDB eklentili PostgreSQL imajı kullan
-    restart: always                           # Konteyner çökerse otomatik olarak yeniden başlasın
+    image: timescale/timescaledb:latest-pg14
+    restart: always
     ports:
-      - "5432:5432"                           # Bilgisayarımızdaki 5432 portunu konteynerdeki 5432 porta yönlendir
+      - "5432:5432"
     environment:
-      POSTGRES_USER: postgres                 # Veritabanı kullanıcı adı
-      POSTGRES_PASSWORD: reklagram_pass       # Veritabanı şifresi (Lokalde böyle tutmak sorun değil, üretimde ENV ile)
-      POSTGRES_DB: reklagram_db               # Veritabanı adı
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: reklagram_pass
+      POSTGRES_DB: reklagram_db
     volumes:
-      - db_data:/var/lib/postgresql/data      # Veri kaybı olmaması için verileri kalıcı olarak sakla
+      - db_data:/var/lib/postgresql/data
     networks:
-      - reklagram_network                     # db_postgres servisini reklagram_network ağına ekle
+      - reklagram_network
 
-  # MongoDB Veritabanı Servisi
+  # 4. MongoDB Veritabanı
   db_mongodb:
-    image: mongo:latest                       # En güncel MongoDB imajı kullan
-    restart: always                           # Konteyner çökerse otomatik olarak yeniden başlasın
+    image: mongo:latest
+    restart: always
     ports:
-      - "27017:27017"                         # Bilgisayarımızdaki 27017 portunu konteynerdeki 27017 porta yönlendir
+      - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin       # MongoDB yönetici kullanıcı adı
-      MONGO_INITDB_ROOT_PASSWORD: reklagram_mongo_pass # MongoDB yönetici şifresi
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: reklagram_mongo_pass
     volumes:
-      - mongo_data:/data/db                   # Veri kaybı olmaması için verileri kalıcı olarak sakla
+      - mongo_data:/data/db
     networks:
-      - reklagram_network                     # db_mongodb servisini reklagram_network ağına ekle
+      - reklagram_network
 
-# Docker Volume Tanımları (Veri Kalıcılığı İçin)
+  # 5. Adminer (Veritabanı İzleme) - DÜZELTİLDİ
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - reklagram_network # Bu satır çok önemli, yoksa db'yi görmez!
+    depends_on:
+      - db_postgres
+
+# Volume Tanımları
 volumes:
-  db_data:                                    # PostgreSQL verileri için volume
-  mongo_data:                                 # MongoDB verileri için volume
+  db_data:
+  mongo_data:
 
-# Docker Ağ Tanımı (Servislerin Birbirini Görmesi İçin)
+    # Ağ Tanımı
 networks:
   reklagram_network:
-    driver: bridge                            # Konteynerler arası bağlantıyı sağlar
+    driver: bridge

@@ -674,13 +674,13 @@ export default function BrandExplore() {
                   <span>Mesaj Gönder</span>
                   <Send className="w-4 h-4" />
                 </Link>
-                <button 
-                  onClick={() => openCollaborationModal(influencer)}
+              <button 
+                onClick={() => openCollaborationModal(influencer)}
                   className="w-full py-3 px-6 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center space-x-2 font-jakarta"
-                >
-                  <span>İşbirliği Teklifi Gönder</span>
-                  <Send className="w-4 h-4" />
-                </button>
+              >
+                <span>İşbirliği Teklifi Gönder</span>
+                <Send className="w-4 h-4" />
+              </button>
               </div>
             </motion.div>
           ))}

@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import finance
 
 # --- BURASI ÖNEMLİ ---
 from .database import engine
@@ -14,6 +15,8 @@ from .models.user import User
 from .models.influencer import Influencer
 from .models.brand import Brand
 from .models.collaboration import Collaboration
+# Finans Modellerini ekle ki tablolar oluşsun
+from .models.finance import Wallet, Transaction
 
 # Tüm modeller import edildikten sonra tabloları oluştur
 Base.metadata.create_all(bind=engine)
@@ -37,7 +40,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
-
+app.include_router(finance.router)
 @app.get("/", tags=["Root"])
 def read_root():
     content = {"message": "ReklaGram Backend Çalışıyor ve Veritabanı Bağlantısı Hazır!"}

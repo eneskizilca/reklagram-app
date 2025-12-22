@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+// 👇 Cüzdan Bileşeni Burada Import Edildi
+import WalletCard from "@/components/dashboard/WalletCard";
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Briefcase, 
@@ -296,6 +298,16 @@ export default function BrandProfile() {
               Düzenle
             </button>
           </div>
+        </motion.div>
+
+        {/* 💳 CÜZDAN KARTI BURAYA EKLENDİ 💳 */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          <WalletCard />
         </motion.div>
 
         {/* Stats Grid */}
