@@ -23,7 +23,7 @@ class TransactionStatus(enum.Enum):
 
 
 class Wallet(Base):
-    __tablename__ = "wallets"
+    __tablename__ = "finance_wallets"
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
@@ -38,7 +38,7 @@ class Wallet(Base):
 
 
 class Transaction(Base):
-    __tablename__ = "transactions"
+    __tablename__ = "finance_transactions"
     
     id = Column(Integer, primary_key=True, index=True)
     wallet_id = Column(Integer, ForeignKey("wallets.id"), nullable=False)

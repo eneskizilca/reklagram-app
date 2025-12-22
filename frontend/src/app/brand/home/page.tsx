@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { 
+import {
   Search,
-  TrendingUp, 
-  Users, 
-  DollarSign, 
+  TrendingUp,
+  Users,
+  DollarSign,
   Target,
   Briefcase,
   LogOut,
@@ -159,13 +159,7 @@ export default function BrandHomePage() {
       type: 'success',
       time: '2 saat önce'
     },
-    {
-      id: 2,
-      icon: MessageSquare,
-      text: 'Mehmet Demir size mesaj gönderdi',
-      type: 'info',
-      time: '5 saat önce'
-    },
+
     {
       id: 3,
       icon: AlertCircle,
@@ -219,18 +213,19 @@ export default function BrandHomePage() {
 
             {/* Desktop Menu Items */}
             <div className="hidden md:flex items-center space-x-6 font-inter">
-              <Link 
+              <Link
                 href="/brand/explore"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
                 Keşfet
               </Link>
-              <Link 
+              <Link
                 href="/brand/campaigns"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
                 Kampanyalarım
               </Link>
+<<<<<<< HEAD
               <Link 
                 href="/brand/collaborations"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
@@ -238,6 +233,9 @@ export default function BrandHomePage() {
                 İşbirliklerim
               </Link>
               <Link 
+=======
+              <Link
+>>>>>>> 6748354 (feat: Cüzdan sistemi ve temizlik çalışmaları yeni branch'e taşındı)
                 href="/brand/analytics"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
@@ -445,25 +443,23 @@ export default function BrandHomePage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
-                className={`flex items-start space-x-3 p-4 rounded-xl ${
-                  activity.type === 'success' 
-                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/30' 
+                className={`flex items-start space-x-3 p-4 rounded-xl ${activity.type === 'success'
+                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/30'
                     : activity.type === 'warning'
-                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/30'
-                    : activity.type === 'error'
-                    ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/30'
-                    : 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30'
-                }`}
+                      ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/30'
+                      : activity.type === 'error'
+                        ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/30'
+                        : 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30'
+                  }`}
               >
-                <activity.icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                  activity.type === 'success' 
+                <activity.icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${activity.type === 'success'
                     ? 'text-green-600 dark:text-green-400'
                     : activity.type === 'warning'
-                    ? 'text-yellow-600 dark:text-yellow-400'
-                    : activity.type === 'error'
-                    ? 'text-red-600 dark:text-red-400'
-                    : 'text-blue-600 dark:text-blue-400'
-                }`} />
+                      ? 'text-yellow-600 dark:text-yellow-400'
+                      : activity.type === 'error'
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-blue-600 dark:text-blue-400'
+                  }`} />
                 <div className="flex-1">
                   <p className="text-sm text-gray-900 dark:text-white font-medium font-inter">
                     {activity.text}
