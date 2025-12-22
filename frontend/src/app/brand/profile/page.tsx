@@ -157,7 +157,7 @@ export default function BrandProfile() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/brand/home" className="flex items-center space-x-3">
+            <Link href="/brand/explore" className="flex items-center space-x-3">
               <div className="relative w-10 h-10">
                 <Image
                   src="/reklagram-logo.png"
@@ -173,11 +173,8 @@ export default function BrandProfile() {
             </Link>
 
             <div className="hidden md:flex items-center space-x-6 font-inter">
-              <Link href="/brand/discover" className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors">
+              <Link href="/brand/explore" className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors">
                 Influencer Keşfet
-              </Link>
-              <Link href="/brand/campaigns" className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors">
-                Kampanyalarım
               </Link>
               <Link href="/brand/analytics" className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors">
                 Raporlar
@@ -239,11 +236,8 @@ export default function BrandProfile() {
             className="md:hidden border-t border-gray-200 dark:border-slate-700"
           >
             <div className="px-4 py-3 space-y-2">
-              <Link href="/brand/discover" onClick={() => setShowMobileMenu(false)} className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter">
+              <Link href="/brand/explore" onClick={() => setShowMobileMenu(false)} className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter">
                 Influencer Keşfet
-              </Link>
-              <Link href="/brand/campaigns" onClick={() => setShowMobileMenu(false)} className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter">
-                Kampanyalarım
               </Link>
               <Link href="/brand/analytics" onClick={() => setShowMobileMenu(false)} className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter">
                 Raporlar

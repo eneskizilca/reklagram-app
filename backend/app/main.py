@@ -22,7 +22,7 @@ from .models.finance import Wallet, Transaction
 Base.metadata.create_all(bind=engine)
 # --- BURASI ÖNEMLİ SONU ---
 
-from .routers import auth, instagram, collaborations, admin
+from .routers import auth, instagram, collaborations, admin, influencers
 
 app = FastAPI(
     title="ReklaGram API",
@@ -40,11 +40,10 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
-
 app.include_router(instagram.router)
 app.include_router(collaborations.router)
 app.include_router(admin.router)
-
+app.include_router(influencers.router)
 app.include_router(finance.router)
 @app.get("/", tags=["Root"])
 def read_root():

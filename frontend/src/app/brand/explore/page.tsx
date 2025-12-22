@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -198,6 +199,14 @@ export default function BrandExplore() {
     budget: '',
     deadline: null as Date | null
   });
+  
+  // 🆕 Gerçek influencer verisi (Instagram API'den)
+  const [influencers, setInfluencers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Fübet (Instagram API) credentials
+  const INSTAGRAM_ACCESS_TOKEN = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN || "EAAMtZCWmJZBjEBO0zB0iYpfwDq7c8AQsv11brTmrxGtVoZAsC0oLkV0eExnDtAg4TIrTKMJC6lT6yVoawHWGW9M5omw5lPMdQd7vZCMH58tOW3bBSgJ6P2JIzkHiC1a6fLkZBNaOLqr3sBg24UfZAK2ZA47L1n3dD";
+  const INSTAGRAM_BUSINESS_ID = process.env.NEXT_PUBLIC_INSTAGRAM_BUSINESS_ID || "17841464952420470";
 
   useEffect(() => {
     // Auth kontrolü
@@ -215,7 +224,306 @@ export default function BrandExplore() {
       const name = email.split('@')[0];
       setCompanyName(name.charAt(0).toUpperCase() + name.slice(1));
     }
+    
+    // 🆕 Influencer verilerini API'den çek (Instagram metrics ile)
+    fetchInfluencers();
   }, [router]);
+  
+  // 🆕 Fübet'ten gerçek Instagram verisi + Database'den gerçek influencer'lar
+  const fetchInfluencers = async () => {
+    try {
+      setLoading(true);
+      
+      // 1️⃣ Fübet'ten GERÇEK Instagram verisi çek (ilk kart için)
+      let realInstagramInfluencer = null;
+      try {
+        console.log('🔍 Instagram API çağrısı başlıyor...');
+        
+        // A. Profil Bilgileri
+        const profileRes = await axios.get(
+          `https://graph.facebook.com/v18.0/${INSTAGRAM_BUSINESS_ID}`,
+          {
+            params: {
+              fields: 'name,username,biography,followers_count,media_count,profile_picture_url',
+              access_token: INSTAGRAM_ACCESS_TOKEN
+            }
+          }
+        );
+        const pData = profileRes.data;
+        console.log('✅ Profil verisi alındı:', pData);
+
+        // B. Medyalar (son 10 post)
+        const mediaRes = await axios.get(
+          `https://graph.facebook.com/v18.0/${INSTAGRAM_BUSINESS_ID}/media`,
+          {
+            params: {
+              fields: 'id,like_count,comments_count',
+              limit: 10,
+              access_token: INSTAGRAM_ACCESS_TOKEN
+            }
+          }
+        );
+        const mediaData = mediaRes.data.data || [];
+
+        // C. Engagement Rate Hesapla
+        let totalLikes = 0;
+        let totalComments = 0;
+        mediaData.forEach((post: any) => {
+          totalLikes += (post.like_count || 0);
+          totalComments += (post.comments_count || 0);
+        });
+        const postCount = mediaData.length || 1;
+        const totalInteractions = totalLikes + totalComments;
+        const engagementRate = pData.followers_count > 0 
+          ? (((totalInteractions / postCount) / pData.followers_count) * 100).toFixed(2)
+          : 0;
+
+        // D. Followers formatla
+        const formatFollowers = (count: number) => {
+          if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+          if (count >= 1000) return `${(count / 1000).toFixed(0)}K`;
+          return count.toString();
+        };
+
+        const followersCount = pData.followers_count || 0;
+        const instagramFollowers = formatFollowers(followersCount);
+
+        // E. Gerçek Instagram kartı oluştur
+        realInstagramInfluencer = {
+          id: 999999, // Özel ID (database'de yok)
+          name: pData.name || 'Instagram User',
+          username: `@${pData.username}`,
+          avatar: pData.profile_picture_url || '',
+          category: 'İçerik Üretici',
+          bio: pData.biography || 'Instagram Influencer',
+          location: 'Türkiye',
+          platforms: {
+            instagram: { 
+              followers: instagramFollowers, 
+              engagement: `${engagementRate}%` 
+            },
+            youtube: { 
+              followers: formatFollowers(Math.floor(followersCount * 0.6)),
+              engagement: `${(parseFloat(engagementRate.toString()) * 0.8).toFixed(1)}%` 
+            },
+            tiktok: { 
+              followers: formatFollowers(Math.floor(followersCount * 0.4)),
+              engagement: `${(parseFloat(engagementRate.toString()) * 1.3).toFixed(1)}%` 
+            }
+          },
+          totalReach: instagramFollowers,
+          avgEngagement: `${engagementRate}%`,
+          priceRange: `₺${Math.floor(followersCount / 15).toLocaleString('tr-TR')} - ₺${Math.floor(followersCount / 10).toLocaleString('tr-TR')}`,
+          verified: true,
+          collaborations: Math.floor(followersCount / 5000),
+          tags: ['İçerik Üretici', 'Influencer', `${instagramFollowers} takipçi`, '🔥 Gerçek Veri'],
+          rating: 4.9,
+          isRealData: true // Gerçek veri bayrağı
+        };
+      } catch (instagramError: any) {
+        console.error('❌ Fübet verisi çekilemedi:', instagramError);
+        if (instagramError.response) {
+          console.error('API Response:', instagramError.response.data);
+          console.error('Status:', instagramError.response.status);
+        }
+      }
+
+      // 2️⃣ Premium Fake Influencer'lar (Demo için)
+      const premiumInfluencers = [
+        {
+          id: 999901,
+          name: 'Ayşe Yılmaz',
+          username: '@ayse.yilmaz',
+          avatar: 'A',
+          category: 'Moda & Lifestyle',
+          bio: 'Moda tutkunu, stil danışmanı ve içerik üreticisi. Markalarla özgün işbirlikleri yapıyorum.',
+          location: 'İstanbul, Türkiye',
+          platforms: {
+            instagram: { followers: '342K', engagement: '5.8%' },
+            youtube: { followers: '205K', engagement: '4.6%' },
+            tiktok: { followers: '137K', engagement: '7.5%' }
+          },
+          totalReach: '684K',
+          avgEngagement: '5.8%',
+          priceRange: '₺22.800 - ₺34.200',
+          verified: true,
+          collaborations: 68,
+          tags: ['Moda', 'Lifestyle', 'Beauty', '342K takipçi'],
+          rating: 4.9,
+          isRealData: false
+        },
+        {
+          id: 999902,
+          name: 'Mehmet Kaya',
+          username: '@mehmet.tech',
+          avatar: 'M',
+          category: 'Teknoloji',
+          bio: 'Teknoloji incelemecisi ve gadget meraklısı. Yeni ürünleri test edip deneyimlerimi paylaşıyorum.',
+          location: 'Ankara, Türkiye',
+          platforms: {
+            instagram: { followers: '256K', engagement: '4.2%' },
+            youtube: { followers: '384K', engagement: '5.1%' },
+            tiktok: { followers: '102K', engagement: '5.5%' }
+          },
+          totalReach: '742K',
+          avgEngagement: '4.2%',
+          priceRange: '₺17.066 - ₺25.600',
+          verified: true,
+          collaborations: 51,
+          tags: ['Teknoloji', 'Gadget', 'Review', '256K takipçi'],
+          rating: 4.8,
+          isRealData: false
+        },
+        {
+          id: 999903,
+          name: 'Zeynep Demir',
+          username: '@zeynep.fitness',
+          avatar: 'Z',
+          category: 'Sağlık & Fitness',
+          bio: 'Sertifikalı fitness antrenörü. Sağlıklı yaşam ve egzersiz rutinleri paylaşıyorum.',
+          location: 'İzmir, Türkiye',
+          platforms: {
+            instagram: { followers: '445K', engagement: '6.3%' },
+            youtube: { followers: '267K', engagement: '5.0%' },
+            tiktok: { followers: '178K', engagement: '8.2%' }
+          },
+          totalReach: '890K',
+          avgEngagement: '6.3%',
+          priceRange: '₺29.666 - ₺44.500',
+          verified: true,
+          collaborations: 89,
+          tags: ['Fitness', 'Sağlık', 'Spor', '445K takipçi'],
+          rating: 4.9,
+          isRealData: false
+        },
+        {
+          id: 999904,
+          name: 'Can Özkan',
+          username: '@can.food',
+          avatar: 'C',
+          category: 'Yemek & Gastronomi',
+          bio: 'Yemek fotoğrafçısı ve lezzet arayışındaki bir gurme. Restoran tavsiyeleri ve tarifler.',
+          location: 'Antalya, Türkiye',
+          platforms: {
+            instagram: { followers: '198K', engagement: '7.1%' },
+            youtube: { followers: '119K', engagement: '5.7%' },
+            tiktok: { followers: '79K', engagement: '9.2%' }
+          },
+          totalReach: '396K',
+          avgEngagement: '7.1%',
+          priceRange: '₺13.200 - ₺19.800',
+          verified: true,
+          collaborations: 39,
+          tags: ['Yemek', 'Food', 'Gastronomi', '198K takipçi'],
+          rating: 4.7,
+          isRealData: false
+        },
+        {
+          id: 999905,
+          name: 'Elif Arslan',
+          username: '@elif.travel',
+          avatar: 'E',
+          category: 'Seyahat',
+          bio: 'Dünya gezgini ve macera avcısı. 47 ülke gezdim, deneyimlerimi sizlerle paylaşıyorum.',
+          location: 'İstanbul, Türkiye',
+          platforms: {
+            instagram: { followers: '567K', engagement: '5.4%' },
+            youtube: { followers: '340K', engagement: '4.8%' },
+            tiktok: { followers: '227K', engagement: '7.0%' }
+          },
+          totalReach: '1.1M',
+          avgEngagement: '5.4%',
+          priceRange: '₺37.800 - ₺56.700',
+          verified: true,
+          collaborations: 113,
+          tags: ['Seyahat', 'Travel', 'Adventure', '567K takipçi'],
+          rating: 5.0,
+          isRealData: false
+        },
+        {
+          id: 999906,
+          name: 'Burak Yıldız',
+          username: '@burak.gaming',
+          avatar: 'B',
+          category: 'Gaming & Espor',
+          bio: 'Profesyonel oyuncu ve yayıncı. FPS ve MOBA oyunlarında uzmanım. Twitch: burak_gaming',
+          location: 'Bursa, Türkiye',
+          platforms: {
+            instagram: { followers: '289K', engagement: '4.9%' },
+            youtube: { followers: '412K', engagement: '6.2%' },
+            tiktok: { followers: '156K', engagement: '6.4%' }
+          },
+          totalReach: '857K',
+          avgEngagement: '4.9%',
+          priceRange: '₺19.266 - ₺28.900',
+          verified: true,
+          collaborations: 57,
+          tags: ['Gaming', 'Espor', 'Twitch', '289K takipçi'],
+          rating: 4.8,
+          isRealData: false
+        }
+      ];
+
+      // 3️⃣ Database'den gerçek influencer'ları çek
+      const response = await axios.get('http://localhost:8000/influencers/list?limit=50');
+      
+      const apiInfluencers = response.data.map((inf: any) => {
+        // Followers formatla
+        const formatFollowers = (count: number) => {
+          if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+          if (count >= 1000) return `${(count / 1000).toFixed(0)}K`;
+          return count.toString();
+        };
+        
+        const instagramFollowers = formatFollowers(inf.followers || 0);
+        const totalReach = formatFollowers(inf.followers || 0);
+        
+        return {
+          id: inf.id,
+          name: inf.display_name,
+          username: inf.username,
+          avatar: inf.profile_picture || inf.display_name.charAt(0).toUpperCase(),
+          category: inf.category || 'Genel',
+          bio: inf.bio || 'Henüz bio eklenmemiş.',
+          location: inf.location || 'Türkiye',
+          platforms: {
+            instagram: { 
+              followers: instagramFollowers, 
+              engagement: `${inf.engagement_rate || 0}%` 
+            },
+            youtube: { 
+              followers: formatFollowers(Math.floor((inf.followers || 0) * 0.6)),
+              engagement: `${((inf.engagement_rate || 0) * 0.8).toFixed(1)}%` 
+            },
+            tiktok: { 
+              followers: formatFollowers(Math.floor((inf.followers || 0) * 0.4)),
+              engagement: `${((inf.engagement_rate || 0) * 1.3).toFixed(1)}%` 
+            }
+          },
+          totalReach: totalReach,
+          avgEngagement: `${inf.engagement_rate || 0}%`,
+          priceRange: `₺${Math.floor((inf.followers || 5000) / 15).toLocaleString('tr-TR')} - ₺${Math.floor((inf.followers || 5000) / 10).toLocaleString('tr-TR')}`,
+          verified: inf.is_verified,
+          collaborations: Math.floor((inf.followers || 0) / 5000),
+          tags: [inf.category || 'Genel', 'Influencer', `${instagramFollowers} takipçi`],
+          rating: parseFloat((4.0 + Math.random()).toFixed(1)),
+          isRealData: false
+        };
+      });
+      
+      // 4️⃣ HEPSİNİ BİRLEŞTİR: Fübet → Premium Fake → Database
+      const allInfluencers = realInstagramInfluencer 
+        ? [realInstagramInfluencer, ...premiumInfluencers, ...apiInfluencers]
+        : [...premiumInfluencers, ...apiInfluencers];
+      
+      setInfluencers(allInfluencers);
+    } catch (error) {
+      console.error('Influencer verileri yüklenemedi:', error);
+      setInfluencers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Dropdown dışına tıklayınca kapat
   useEffect(() => {
@@ -291,8 +599,8 @@ export default function BrandExplore() {
     }
   };
 
-  // Filter influencers
-  const filteredInfluencers = mockInfluencers.filter(influencer => {
+  // Filter influencers - 🆕 Artık gerçek API verisini kullanıyoruz
+  const filteredInfluencers = influencers.filter(influencer => {
     // Favoriler filtresi
     if (selectedCategory === 'Favoriler') {
       const isSaved = savedInfluencers.includes(influencer.id);
@@ -309,6 +617,18 @@ export default function BrandExplore() {
                          influencer.bio.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  // 🆕 Loading spinner göster
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FD] dark:bg-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-inter">Instagram verileri yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${plusJakarta.variable} ${inter.variable} min-h-screen bg-[#F8F9FD] dark:bg-slate-900`}>
@@ -344,12 +664,6 @@ export default function BrandExplore() {
                 className="text-[#1A2A6C] dark:text-white hover:text-[#7C3AED] dark:hover:text-[#A78BFA] font-semibold transition-colors border-b-2 border-[#1A2A6C] dark:border-white pb-1"
               >
                 Keşfet
-              </Link>
-              <Link 
-                href="/brand/campaigns"
-                className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
-              >
-                Kampanyalarım
               </Link>
               <Link 
                 href="/brand/collaborations"
@@ -425,13 +739,6 @@ export default function BrandExplore() {
                 className="flex px-4 py-3 text-[#1A2A6C] dark:text-white bg-gray-100 dark:bg-slate-700 rounded-lg font-semibold font-inter"
               >
                 Keşfet
-              </Link>
-              <Link
-                href="/brand/campaigns"
-                onClick={() => setShowMobileMenu(false)}
-                className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
-              >
-                Kampanyalarım
               </Link>
               <Link
                 href="/brand/collaborations"
@@ -559,14 +866,36 @@ export default function BrandExplore() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.05 }}
               whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-              className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border border-gray-200/50 dark:border-slate-700/50 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20 transition-all cursor-pointer"
+              className={`bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border transition-all cursor-pointer ${
+                influencer.isRealData 
+                  ? 'border-2 border-orange-500 dark:border-orange-400 shadow-2xl shadow-orange-500/30 dark:shadow-orange-500/40 hover:shadow-3xl hover:shadow-orange-500/40' 
+                  : 'border-gray-200/50 dark:border-slate-700/50 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20'
+              }`}
             >
+              {/* Real Data Badge */}
+              {influencer.isRealData && (
+                <div className="mb-3 flex items-center justify-center">
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-xs font-bold font-jakarta shadow-lg flex items-center space-x-1 animate-pulse">
+                    <span>🔥</span>
+                    <span>GERÇEK FÜBET VERİSİ</span>
+                  </span>
+                </div>
+              )}
+              
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-3xl shadow-lg">
-                    {influencer.avatar}
-                  </div>
+                  {influencer.avatar && influencer.avatar.startsWith('http') ? (
+                    <img 
+                      src={influencer.avatar} 
+                      alt={influencer.name}
+                      className="w-16 h-16 rounded-full object-cover shadow-lg border-2 border-white dark:border-slate-700"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-3xl shadow-lg text-white font-bold">
+                      {influencer.avatar}
+                    </div>
+                  )}
                   <div>
                     <div className="flex items-center space-x-2">
                       <h3 className="text-lg font-bold text-[#1A2A6C] dark:text-white font-jakarta">
@@ -641,23 +970,26 @@ export default function BrandExplore() {
 
               {/* Platforms */}
               <div className="grid grid-cols-3 gap-2 mb-4">
-                {Object.entries(influencer.platforms).map(([platform, data]) => (
-                  <div
-                    key={platform}
-                    className="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-slate-700 rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-300 font-inter"
-                  >
-                    {getPlatformIcon(platform)}
-                    <div className="flex flex-col">
-                      <span>{data.followers}</span>
-                      <span className="text-[10px] text-gray-500 dark:text-gray-400">{data.engagement}</span>
+                {Object.entries(influencer.platforms).map(([platform, data]) => {
+                  const platformData = data as { followers: string; engagement: string };
+                  return (
+                    <div
+                      key={platform}
+                      className="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-slate-700 rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-300 font-inter"
+                    >
+                      {getPlatformIcon(platform)}
+                      <div className="flex flex-col">
+                        <span>{platformData.followers}</span>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">{platformData.engagement}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
-                {influencer.tags.map((tag, idx) => (
+                {influencer.tags.map((tag: string, idx: number) => (
                   <span
                     key={idx}
                     className="px-2 py-1 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-lg text-xs font-inter"

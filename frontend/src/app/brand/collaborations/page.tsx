@@ -194,12 +194,6 @@ export default function BrandCollaborations() {
                 Influencer Keşfet
               </Link>
               <Link 
-                href="/brand/campaigns"
-                className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
-              >
-                Kampanyalarım
-              </Link>
-              <Link 
                 href="/brand/collaborations"
                 className="text-[#1A2A6C] dark:text-white hover:text-[#7C3AED] dark:hover:text-[#A78BFA] font-semibold transition-colors border-b-2 border-[#1A2A6C] dark:border-white pb-1"
               >
@@ -270,13 +264,6 @@ export default function BrandCollaborations() {
                 className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
               >
                 Influencer Keşfet
-              </Link>
-              <Link
-                href="/brand/campaigns"
-                onClick={() => setShowMobileMenu(false)}
-                className="flex px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg font-medium font-inter"
-              >
-                Kampanyalarım
               </Link>
               <Link
                 href="/brand/collaborations"
@@ -628,3 +615,6 @@ export default function BrandCollaborations() {
     </div>
   );
 }
+
+
+
