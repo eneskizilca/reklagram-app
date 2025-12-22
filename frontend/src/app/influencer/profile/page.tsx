@@ -135,7 +135,7 @@ export default function InfluencerProfile() {
       }
 
       // --- HESAPLAMALAR ---
-      let totalLikes = 0;
+      let totalLikes = 0; 
       let totalComments = 0;
       mediaData.forEach((post: any) => {
         totalLikes += (post.like_count || 0);
@@ -308,7 +308,24 @@ export default function InfluencerProfile() {
   };
 
   const handleConnectAccount = (platform: string) => {
-    alert(`${platform} bağlama özelliği yakında!`);
+    if (platform === 'Instagram') {
+      const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID;
+      const redirectUri = process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI;
+      
+      // ✅ DÜZELTİLEN KISIM BURASI:
+      // 'business_management' sildik. (Hata veren oydu)
+      // 'pages_read_engagement' ekledik. (Sayfa listesini çekmek için bu yeterli)
+      const scope = "instagram_basic,pages_show_list,instagram_manage_insights,pages_read_engagement";
+
+      if (!clientId || !redirectUri) {
+        alert("Frontend .env ayarları eksik!");
+        return;
+      }
+
+      const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=code`;
+
+      window.location.href = authUrl;
+    }
   };
 
   // Dropdown dışına tıklama kontrolü
@@ -491,19 +508,43 @@ export default function InfluencerProfile() {
               </motion.div>
             </div>
 
-            {/* 4. BAĞLI HESAPLAR */}
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.7 }} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border border-gray-200/50 shadow-lg">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.7 }} 
+              className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border border-gray-200/50 shadow-lg"
+            >
               <h3 className="text-xl font-bold text-[#1A2A6C] dark:text-white mb-6 font-jakarta">Bağlı Hesaplar</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-200">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center"><Instagram className="w-6 h-6 text-white" /></div>
+                    <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
+                      <Instagram className="w-6 h-6 text-white" />
+                    </div>
                     <div>
-                      <div className="font-semibold text-gray-900 font-jakarta">{profile.connected_accounts.instagram.username || "Instagram"}</div>
-                      <div className="text-sm text-gray-600">{profile.connected_accounts.instagram.connected ? 'Bağlandı' : 'Bağlı Değil'}</div>
+                      <div className="font-semibold text-gray-900 font-jakarta">
+                        {profile.connected_accounts.instagram.username || "Instagram"}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {profile.connected_accounts.instagram.connected ? 'Bağlandı' : 'Bağlı Değil'}
+                      </div>
                     </div>
                   </div>
-                  {profile.connected_accounts.instagram.connected ? <CheckCircle2 className="w-6 h-6 text-green-600" /> : <button onClick={() => handleConnectAccount('Instagram')} className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm">Bağla</button>}
+                  
+                  {/* SAĞ TARAF: Hem Tik (varsa) Hem Buton */}
+                  <div className="flex items-center space-x-3">
+                    {profile.connected_accounts.instagram.connected && (
+                      <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    )}
+                    
+                    <button 
+                      onClick={() => handleConnectAccount('Instagram')} 
+                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 transition-colors text-white rounded-lg text-sm font-medium"
+                    >
+                      {profile.connected_accounts.instagram.connected ? 'Yenile' : 'Bağla'}
+                    </button>
+                  </div>
+
                 </div>
               </div>
             </motion.div>
