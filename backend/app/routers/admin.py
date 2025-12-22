@@ -253,3 +253,6 @@ def delete_user(
     db.commit()
     
     return {"message": f"Kullanıcı {user.email} başarıyla silindi"}
+
+
+
