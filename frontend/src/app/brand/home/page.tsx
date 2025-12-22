@@ -21,11 +21,12 @@ import {
   XCircle,
   AlertCircle,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  User // 👈 EKLENDİ: Profil ikonu için
 } from 'lucide-react';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 
-// 👇 CÜZDAN BİLEŞENİ EKLENDİ
+// 👇 CÜZDAN BİLEŞENİ
 import WalletCard from "@/components/dashboard/WalletCard";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -170,10 +171,24 @@ export default function BrandHomePage() {
                   </div>
                   <span className="font-semibold font-jakarta hidden md:block">{companyName}</span>
                 </button>
+                
+                {/* 🛠️ DROPDOWN MENÜ: DÜZELTİLDİ */}
                 {showProfileMenu && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border overflow-hidden">
-                    <button onClick={handleLogout} className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 text-red-600">
-                      <LogOut className="w-4 h-4" /> <span>Çıkış Yap</span>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+                  >
+                    {/* ✅ Profilim Linki Eklendi */}
+                    <Link href="/brand/profile" className="flex items-center space-x-2 px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100 transition-colors">
+                      <User className="w-4 h-4" /> 
+                      <span className="font-medium">Profilim</span>
+                    </Link>
+
+                    {/* Çıkış Yap Butonu */}
+                    <button onClick={handleLogout} className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 text-red-600 transition-colors">
+                      <LogOut className="w-4 h-4" /> 
+                      <span className="font-medium">Çıkış Yap</span>
                     </button>
                   </motion.div>
                 )}
@@ -187,6 +202,7 @@ export default function BrandHomePage() {
             <div className="px-4 py-3 space-y-2">
               <Link href="/brand/explore" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Keşfet</Link>
               <Link href="/brand/campaigns" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Kampanyalar</Link>
+              <Link href="/brand/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Profilim</Link>
             </div>
           </motion.div>
         )}
@@ -204,7 +220,7 @@ export default function BrandHomePage() {
         {/* 🛠️ HYBRID LAYOUT: CÜZDAN + İSTATİSTİKLER */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           
-          {/* SOL: CÜZDAN KARTI (Eklendi) */}
+          {/* SOL: CÜZDAN KARTI */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }} 
             animate={{ opacity: 1, x: 0 }} 
@@ -214,7 +230,7 @@ export default function BrandHomePage() {
             <WalletCard userType="brand" />
           </motion.div>
 
-          {/* SAĞ: İSTATİSTİK KARTLARI (Senin tasarımın) */}
+          {/* SAĞ: İSTATİSTİK KARTLARI */}
           <div className="lg:col-span-2">
             <div className="grid grid-cols-2 gap-4 h-full">
               {statsCards.map((stat, index) => (
