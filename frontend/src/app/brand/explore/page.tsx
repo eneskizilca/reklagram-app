@@ -9,10 +9,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { tr } from 'date-fns/locale';
-import { 
-  Search, 
+import {
+  Search,
   Filter,
-  Briefcase, 
+  Briefcase,
   LogOut,
   Users,
   MapPin,
@@ -199,11 +199,11 @@ export default function BrandExplore() {
     budget: '',
     deadline: null as Date | null
   });
-  
+
   // 🆕 Gerçek influencer verisi (Instagram API'den)
   const [influencers, setInfluencers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Fübet (Instagram API) credentials
   const INSTAGRAM_ACCESS_TOKEN = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN || "EAAMtZCWmJZBjEBO0zB0iYpfwDq7c8AQsv11brTmrxGtVoZAsC0oLkV0eExnDtAg4TIrTKMJC6lT6yVoawHWGW9M5omw5lPMdQd7vZCMH58tOW3bBSgJ6P2JIzkHiC1a6fLkZBNaOLqr3sBg24UfZAK2ZA47L1n3dD";
   const INSTAGRAM_BUSINESS_ID = process.env.NEXT_PUBLIC_INSTAGRAM_BUSINESS_ID || "17841464952420470";
@@ -224,21 +224,21 @@ export default function BrandExplore() {
       const name = email.split('@')[0];
       setCompanyName(name.charAt(0).toUpperCase() + name.slice(1));
     }
-    
+
     // 🆕 Influencer verilerini API'den çek (Instagram metrics ile)
     fetchInfluencers();
   }, [router]);
-  
+
   // 🆕 Fübet'ten gerçek Instagram verisi + Database'den gerçek influencer'lar
   const fetchInfluencers = async () => {
     try {
       setLoading(true);
-      
+
       // 1️⃣ Fübet'ten GERÇEK Instagram verisi çek (ilk kart için)
       let realInstagramInfluencer = null;
       try {
         console.log('🔍 Instagram API çağrısı başlıyor...');
-        
+
         // A. Profil Bilgileri
         const profileRes = await axios.get(
           `https://graph.facebook.com/v18.0/${INSTAGRAM_BUSINESS_ID}`,
@@ -274,7 +274,7 @@ export default function BrandExplore() {
         });
         const postCount = mediaData.length || 1;
         const totalInteractions = totalLikes + totalComments;
-        const engagementRate = pData.followers_count > 0 
+        const engagementRate = pData.followers_count > 0
           ? (((totalInteractions / postCount) / pData.followers_count) * 100).toFixed(2)
           : 0;
 
@@ -298,17 +298,17 @@ export default function BrandExplore() {
           bio: pData.biography || 'Instagram Influencer',
           location: 'Türkiye',
           platforms: {
-            instagram: { 
-              followers: instagramFollowers, 
-              engagement: `${engagementRate}%` 
+            instagram: {
+              followers: instagramFollowers,
+              engagement: `${engagementRate}%`
             },
-            youtube: { 
+            youtube: {
               followers: formatFollowers(Math.floor(followersCount * 0.6)),
-              engagement: `${(parseFloat(engagementRate.toString()) * 0.8).toFixed(1)}%` 
+              engagement: `${(parseFloat(engagementRate.toString()) * 0.8).toFixed(1)}%`
             },
-            tiktok: { 
+            tiktok: {
               followers: formatFollowers(Math.floor(followersCount * 0.4)),
-              engagement: `${(parseFloat(engagementRate.toString()) * 1.3).toFixed(1)}%` 
+              engagement: `${(parseFloat(engagementRate.toString()) * 1.3).toFixed(1)}%`
             }
           },
           totalReach: instagramFollowers,
@@ -326,7 +326,7 @@ export default function BrandExplore() {
           console.error('API Response:', instagramError.response.data);
           console.error('Status:', instagramError.response.status);
         }
-        
+
         // Hata durumunda Mock Fübet Kartı göster
         console.log('⚠️ Mock Fübet kartı gösteriliyor...');
         realInstagramInfluencer = {
@@ -491,7 +491,7 @@ export default function BrandExplore() {
 
       // 3️⃣ Database'den gerçek influencer'ları çek
       const response = await axios.get('http://localhost:8000/influencers/list?limit=50');
-      
+
       const apiInfluencers = response.data.map((inf: any) => {
         // Followers formatla
         const formatFollowers = (count: number) => {
@@ -499,10 +499,10 @@ export default function BrandExplore() {
           if (count >= 1000) return `${(count / 1000).toFixed(0)}K`;
           return count.toString();
         };
-        
+
         const instagramFollowers = formatFollowers(inf.followers || 0);
         const totalReach = formatFollowers(inf.followers || 0);
-        
+
         return {
           id: inf.id,
           name: inf.display_name,
@@ -512,17 +512,17 @@ export default function BrandExplore() {
           bio: inf.bio || 'Henüz bio eklenmemiş.',
           location: inf.location || 'Türkiye',
           platforms: {
-            instagram: { 
-              followers: instagramFollowers, 
-              engagement: `${inf.engagement_rate || 0}%` 
+            instagram: {
+              followers: instagramFollowers,
+              engagement: `${inf.engagement_rate || 0}%`
             },
-            youtube: { 
+            youtube: {
               followers: formatFollowers(Math.floor((inf.followers || 0) * 0.6)),
-              engagement: `${((inf.engagement_rate || 0) * 0.8).toFixed(1)}%` 
+              engagement: `${((inf.engagement_rate || 0) * 0.8).toFixed(1)}%`
             },
-            tiktok: { 
+            tiktok: {
               followers: formatFollowers(Math.floor((inf.followers || 0) * 0.4)),
-              engagement: `${((inf.engagement_rate || 0) * 1.3).toFixed(1)}%` 
+              engagement: `${((inf.engagement_rate || 0) * 1.3).toFixed(1)}%`
             }
           },
           totalReach: totalReach,
@@ -535,12 +535,12 @@ export default function BrandExplore() {
           isRealData: false
         };
       });
-      
+
       // 4️⃣ HEPSİNİ BİRLEŞTİR: Fübet → Premium Fake → Database
-      const allInfluencers = realInstagramInfluencer 
+      const allInfluencers = realInstagramInfluencer
         ? [realInstagramInfluencer, ...premiumInfluencers, ...apiInfluencers]
         : [...premiumInfluencers, ...apiInfluencers];
-      
+
       setInfluencers(allInfluencers);
     } catch (error) {
       console.error('Influencer verileri yüklenemedi:', error);
@@ -577,8 +577,8 @@ export default function BrandExplore() {
   };
 
   const toggleSaveInfluencer = (influencerId: number) => {
-    setSavedInfluencers(prev => 
-      prev.includes(influencerId) 
+    setSavedInfluencers(prev =>
+      prev.includes(influencerId)
         ? prev.filter(id => id !== influencerId)
         : [...prev, influencerId]
     );
@@ -609,14 +609,14 @@ export default function BrandExplore() {
     });
     closeCollaborationModal();
     setShowSuccessModal(true);
-    
+
     setTimeout(() => {
       setShowSuccessModal(false);
     }, 3000);
   };
 
   const getPlatformIcon = (platform: string) => {
-    switch(platform) {
+    switch (platform) {
       case 'instagram': return <Instagram className="w-4 h-4" />;
       case 'youtube': return <Youtube className="w-4 h-4" />;
       case 'tiktok': return <Music2 className="w-4 h-4" />;
@@ -630,16 +630,16 @@ export default function BrandExplore() {
     if (selectedCategory === 'Favoriler') {
       const isSaved = savedInfluencers.includes(influencer.id);
       const matchesSearch = influencer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           influencer.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           influencer.bio.toLowerCase().includes(searchQuery.toLowerCase());
+        influencer.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        influencer.bio.toLowerCase().includes(searchQuery.toLowerCase());
       return isSaved && matchesSearch;
     }
-    
+
     // Diğer kategoriler
     const matchesCategory = selectedCategory === 'Tümü' || influencer.category === selectedCategory;
     const matchesSearch = influencer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         influencer.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         influencer.bio.toLowerCase().includes(searchQuery.toLowerCase());
+      influencer.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      influencer.bio.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -684,13 +684,13 @@ export default function BrandExplore() {
 
             {/* Desktop Menu Items */}
             <div className="hidden md:flex items-center space-x-6 font-inter">
-              <Link 
+              <Link
                 href="/brand/explore"
                 className="text-[#1A2A6C] dark:text-white hover:text-[#7C3AED] dark:hover:text-[#A78BFA] font-semibold transition-colors border-b-2 border-[#1A2A6C] dark:border-white pb-1"
               >
                 Keşfet
               </Link>
-              <Link 
+              <Link
                 href="/brand/collaborations"
                 className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors"
               >
@@ -843,22 +843,20 @@ export default function BrandExplore() {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`px-4 py-2 rounded-full font-medium font-inter transition-all flex items-center space-x-2 ${
-                        selectedCategory === category
+                      className={`px-4 py-2 rounded-full font-medium font-inter transition-all flex items-center space-x-2 ${selectedCategory === category
                           ? 'bg-gradient-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white shadow-lg'
                           : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
-                      }`}
+                        }`}
                     >
                       {category === 'Favoriler' && (
                         <Heart className={`w-4 h-4 ${selectedCategory === category ? 'fill-white' : 'fill-red-500'}`} />
                       )}
                       <span>{category}</span>
                       {category === 'Favoriler' && savedInfluencers.length > 0 && (
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                          selectedCategory === category
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${selectedCategory === category
                             ? 'bg-white/20 text-white'
                             : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                        }`}>
+                          }`}>
                           {savedInfluencers.length}
                         </span>
                       )}
@@ -891,11 +889,10 @@ export default function BrandExplore() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.05 }}
               whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-              className={`bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border transition-all cursor-pointer ${
-                influencer.isRealData 
-                  ? 'border-2 border-orange-500 dark:border-orange-400 shadow-2xl shadow-orange-500/30 dark:shadow-orange-500/40 hover:shadow-3xl hover:shadow-orange-500/40' 
+              className={`bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border transition-all cursor-pointer ${influencer.isRealData
+                  ? 'border-2 border-orange-500 dark:border-orange-400 shadow-2xl shadow-orange-500/30 dark:shadow-orange-500/40 hover:shadow-3xl hover:shadow-orange-500/40'
                   : 'border-gray-200/50 dark:border-slate-700/50 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20'
-              }`}
+                }`}
             >
               {/* Real Data Badge */}
               {influencer.isRealData && (
@@ -906,13 +903,13 @@ export default function BrandExplore() {
                   </span>
                 </div>
               )}
-              
+
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   {influencer.avatar && influencer.avatar.startsWith('http') ? (
-                    <img 
-                      src={influencer.avatar} 
+                    <img
+                      src={influencer.avatar}
                       alt={influencer.name}
                       className="w-16 h-16 rounded-full object-cover shadow-lg border-2 border-white dark:border-slate-700"
                     />
@@ -951,11 +948,10 @@ export default function BrandExplore() {
                   className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
                 >
                   <Heart
-                    className={`w-5 h-5 transition-all ${
-                      savedInfluencers.includes(influencer.id)
+                    className={`w-5 h-5 transition-all ${savedInfluencers.includes(influencer.id)
                         ? 'fill-red-500 text-red-500'
                         : 'text-gray-400'
-                    }`}
+                      }`}
                   />
                 </button>
               </div>
@@ -1044,13 +1040,13 @@ export default function BrandExplore() {
                   <span>Mesaj Gönder</span>
                   <Send className="w-4 h-4" />
                 </Link>
-              <button 
-                onClick={() => openCollaborationModal(influencer)}
+                <button
+                  onClick={() => openCollaborationModal(influencer)}
                   className="w-full py-3 px-6 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center space-x-2 font-jakarta"
-              >
-                <span>İşbirliği Teklifi Gönder</span>
-                <Send className="w-4 h-4" />
-              </button>
+                >
+                  <span>İşbirliği Teklifi Gönder</span>
+                  <Send className="w-4 h-4" />
+                </button>
               </div>
             </motion.div>
           ))}
@@ -1101,9 +1097,17 @@ export default function BrandExplore() {
                 <div className="sticky top-0 bg-gradient-to-r from-[#1A2A6C] via-[#7C3AED] to-[#F97316] text-white p-6 rounded-t-3xl">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-                        {selectedInfluencer.avatar}
-                      </div>
+                      {selectedInfluencer.avatar && selectedInfluencer.avatar.startsWith('http') ? (
+                        <img
+                          src={selectedInfluencer.avatar}
+                          alt={selectedInfluencer.name}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-white/20"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
+                          {selectedInfluencer.avatar}
+                        </div>
+                      )}
                       <div>
                         <h2 className="text-2xl font-bold font-jakarta">{selectedInfluencer.name}</h2>
                         <p className="text-white/80 font-inter">{selectedInfluencer.username}</p>
@@ -1275,7 +1279,7 @@ export default function BrandExplore() {
                   <CloseIcon className="w-5 h-5" />
                 </button>
               </div>
-              
+
               {/* Progress Bar */}
               <motion.div
                 initial={{ scaleX: 1 }}
