@@ -1,7 +1,8 @@
 annotated-doc==0.0.2
 annotated-types==0.7.0
 anyio==4.11.0
-bcrypt==5.0.0
+# KRİTİK DÜZELTME: 5.0.0 yerine 4.0.1 yapıyoruz (Hata çözümü)
+bcrypt==4.0.1
 certifi==2025.10.5
 cffi==2.0.0
 click==8.3.0
@@ -58,3 +59,5 @@ watchfiles==1.1.1
 websockets==15.0.1
 requests==2.31.0
 fastapi-mail==1.4.1
+# YENİ EKLENEN (Seed datası için şart)
+Faker
