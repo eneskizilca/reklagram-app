@@ -93,9 +93,30 @@ export default function InfluencerCollaborations() {
     try {
       setLoading(true);
       const response = await api.get('/collaborations/my-collaborations');
-      setCollaborations(response.data);
-      if (response.data.length > 0) {
-        setSelectedCollaboration(response.data[0]);
+      
+      // 🌟 TUNA TAVUS - Göstermelik İşbirliği
+      const tunaTavusCollab: Collaboration = {
+        id: 9999,
+        brand_id: 1,
+        influencer_id: 1,
+        title: "Fitness Supplement Tanıtım Kampanyası",
+        brief: "🏋️ Tuna Tavus ile fitness supplement markamızın yeni ürün serisini tanıtacağız. 2.6M+ YouTube ve 1.1M+ TikTok takipçisine sahip Tuna'nın mukbang ve fitness içerikleriyle ürünlerimizi geniş kitlelere ulaştıracağız. Survivor 2025 fenomeni olarak bilinen Tuna'nın 'Her Şeyi Yiyen Adam' lakabıyla markamıza özgün bir bakış açısı katacak.",
+        agreed_price: "800000",
+        status: "active",
+        start_date: "2025-01-01",
+        end_date: "2025-03-31",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        brand_name: "FitPower Nutrition",
+        brand_logo: "https://via.placeholder.com/100x100/1A2A6C/FFFFFF?text=FP"
+      };
+      
+      // Tuna Tavus'u listenin başına ekle
+      const allCollaborations = [tunaTavusCollab, ...response.data];
+      
+      setCollaborations(allCollaborations);
+      if (allCollaborations.length > 0) {
+        setSelectedCollaboration(allCollaborations[0]);
       }
     } catch (error) {
       console.error('İşbirlikler yüklenirken hata:', error);

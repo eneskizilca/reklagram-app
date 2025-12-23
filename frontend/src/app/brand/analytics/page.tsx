@@ -53,6 +53,20 @@ const platformData = [
 
 const collaborationsHistory = [
   {
+    id: 9999,
+    influencer: '🌟 Tuna Tavus',
+    campaign: 'Fitness Supplement Tanıtım Kampanyası',
+    platform: 'YouTube & Instagram',
+    startDate: '2025-01-01',
+    endDate: '2025-03-31',
+    amountPaid: 80000,
+    revenue: 425000,
+    roi: 431,
+    status: 'active',
+    reach: 3700000,
+    engagement: 8.9
+  },
+  {
     id: 1,
     influencer: 'Ayşe Yılmaz',
     campaign: 'Yaz Koleksiyonu 2024',
