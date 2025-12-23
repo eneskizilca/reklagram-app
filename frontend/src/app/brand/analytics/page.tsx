@@ -201,13 +201,10 @@ export default function BrandAnalytics() {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-6 font-inter">
               <Link href="/brand/explore" className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors">
-                Keşfet
-              </Link>
-              <Link href="/brand/collaborations" className="text-gray-700 dark:text-gray-300 hover:text-[#1A2A6C] dark:hover:text-white font-medium transition-colors">
-                İşbirlikleri
+                Influencer Keşfet
               </Link>
               <Link href="/brand/analytics" className="text-[#1A2A6C] dark:text-white hover:text-[#7C3AED] dark:hover:text-[#A78BFA] font-semibold transition-colors border-b-2 border-[#1A2A6C] dark:border-white pb-1">
-                Analitikler
+                Raporlar
               </Link>
             </div>
 
@@ -527,7 +524,7 @@ export default function BrandAnalytics() {
                             {collab.influencer}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {collab.reach.toLocaleString()} erişim
+                            {collab.reach.toLocaleString('tr-TR')} erişim
                           </p>
                         </div>
                       </div>
