@@ -524,7 +524,7 @@ export default function BrandAnalytics() {
                             {collab.influencer}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {collab.reach.toLocaleString()} erişim
+                            {collab.reach.toLocaleString('tr-TR')} erişim
                           </p>
                         </div>
                       </div>
